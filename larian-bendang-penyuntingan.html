@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Larian Bendang · Penyuntingan F5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+<style>
+:root{--g1:#e8f8d8;--g2:#9bd46a;--g3:#4c9a2a;--dk:#24502a;--mud:#a9774b;--sun:#ffd23f;--red:#ff6b6b;--blue:#4ea8de;--card:#fff;--txt:#2d3a2a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font-family:'Waknan','Baloo 2','ZCOOL KuaiLe',sans-serif;background:linear-gradient(#bfe9ff 0,#e8f8d8 180px,#d4efb8 100%);color:var(--txt);min-height:100vh;overflow-x:hidden}
+.wrap{max-width:480px;margin:0 auto;padding:12px 14px 120px}
+.zh{font-family:'Waknan','ZCOOL KuaiLe','Baloo 2',sans-serif;color:#5d6b58;font-size:.88em}
+button{font-family:inherit;cursor:pointer;border:none}
+.btn{background:var(--g3);color:#fff;font-weight:800;font-size:1.1rem;padding:12px 18px;border-radius:16px;box-shadow:0 4px 0 var(--dk);width:100%}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--dk)}
+.btn.sun{background:var(--sun);color:#5a3b00;box-shadow:0 4px 0 #c99a00}
+.btn.ghost{background:#fff;color:var(--dk);box-shadow:0 4px 0 #b8d8a0}
+.btn.sm{font-size:.95rem;padding:9px 12px;width:auto}
+.card{background:var(--card);border-radius:22px;padding:16px;box-shadow:0 6px 0 rgba(76,154,42,.25);margin:12px 0}
+.hidden{display:none!important}
+h1{margin:4px 0;font-size:2rem;color:var(--dk);text-align:center;line-height:1.1}
+h2{margin:4px 0 8px;color:var(--dk);font-size:1.3rem}
+input[type=text]{width:100%;font-family:inherit;font-size:1.15rem;padding:12px;border-radius:14px;border:3px solid var(--g2);outline:none}
+input[type=text]:focus{border-color:var(--g3)}
+/* HUD */
+.hud{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.95);border-radius:0 0 18px 18px;padding:8px 12px 6px;box-shadow:0 3px 8px rgba(0,0,0,.08);margin:-12px -14px 8px}
+.hudrow{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:1rem}
+.pill{background:var(--g1);padding:3px 10px;border-radius:99px}
+.pill.t{background:#fff3c4}
+.pill.t.low{background:#ffd6d6;color:#b00}
+.track{position:relative;height:38px;margin-top:6px;border-radius:12px;background:repeating-linear-gradient(90deg,#8fcf5b 0 14px,#7fc24c 14px 28px);overflow:hidden;border:2px solid var(--g3)}
+.track .mudline{position:absolute;left:0;right:0;bottom:0;height:10px;background:var(--mud);opacity:.6}
+.runner{position:absolute;bottom:4px;font-size:26px;transition:left .8s cubic-bezier(.3,1.5,.6,1);transform:scaleX(-1)}
+.flag{position:absolute;right:4px;bottom:4px;font-size:24px}
+.stageTag{font-size:.85rem;color:#5d6b58;text-align:center;margin-top:2px}
+/* passage */
+.passage{font-size:1.08rem;line-height:1.95;text-align:justify}
+.passage .s{border-radius:8px;transition:background .3s}
+.passage .s.hl{background:#fff3a8;box-shadow:0 0 0 3px #fff3a8}
+.w{padding:1px 2px;border-radius:6px;cursor:pointer;user-select:none}
+.w:active{background:#e6f4ff}
+.w.bad{animation:shake .4s;background:#ffd6d6}
+.w.err{white-space:nowrap}
+.w.done::after{white-space:nowrap}
+.w.found{background:#ffe08a;text-decoration:line-through wavy var(--red);font-weight:700}
+.w.done{background:#c9f2b5;text-decoration:none;font-weight:700;color:var(--dk)}
+.w.done::after{content:attr(data-fix);display:inline;font-size:.8em;color:#fff;background:var(--g3);border-radius:6px;padding:0 5px;margin-left:3px}
+.w.miss{background:#eee;color:#999}
+@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.poster{background:linear-gradient(#fffdf2,#fff6d8);border:3px dashed var(--mud);border-radius:18px;padding:12px}
+.poster .ttl{text-align:center;font-weight:800;font-size:1.35rem;color:#7a3e00;letter-spacing:.5px}
+.poster .prize{background:#fff;border:3px solid var(--red);border-radius:14px;text-align:center;padding:6px;margin:8px 0}
+.poster .prize b{font-size:1.5rem;color:var(--red)}
+.poster .syarat{font-weight:800;color:#7a3e00;margin-top:6px}
+.poster .s{display:block;text-align:left}
+.poster .foot{font-size:.8rem;color:#7a5a3a;margin-top:6px;text-align:center}
+.foundbar{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:6px}
+.dots span{display:inline-block;width:14px;height:14px;border-radius:50%;background:#e1e1e1;margin:2px}
+.dots span.on{background:var(--sun)}
+.dots span.ok{background:var(--g3)}
+/* sheet */
+.overlay{position:fixed;inset:0;background:rgba(20,40,20,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.overlay.center{align-items:center}
+.sheet{background:#fff;width:100%;max-width:480px;border-radius:26px 26px 0 0;padding:18px 16px 22px;max-height:92vh;overflow:auto;animation:up .3s}
+.overlay.center .sheet{border-radius:26px;margin:14px;width:calc(100% - 28px)}
+@keyframes up{from{transform:translateY(60px);opacity:0}}
+.wrongbox{background:#fff0f0;border:2px solid #ffb3b3;border-radius:14px;padding:8px 12px;font-size:1.15rem;margin:6px 0}
+.wrongbox s{color:var(--red);font-weight:800}
+.ctx{font-size:.92rem;color:#667;margin:4px 0 10px;line-height:1.5}
+.ctx mark{background:#ffe08a;border-radius:4px;padding:0 3px}
+.hints{display:flex;gap:8px;margin-top:10px}
+.hints button{flex:1;background:#eef7ff;color:#1d5f8c;font-weight:700;border-radius:12px;padding:8px 4px;font-size:.9rem;box-shadow:0 3px 0 #b9dcf5}
+.hints button:disabled{opacity:.45}
+.hintmsg{background:#fff8d6;border-radius:12px;padding:8px 12px;margin-top:8px;font-size:1rem}
+.msg{font-weight:800;margin-top:8px;min-height:1.4em}
+.msg.no{color:var(--red)} .msg.yes{color:var(--g3)}
+.jgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.jgrid button{background:var(--g1);color:var(--dk);font-weight:700;padding:10px 6px;border-radius:12px;font-size:.95rem;box-shadow:0 3px 0 #b8d8a0}
+.jgrid button.right{background:var(--g3);color:#fff}
+.jgrid button.wrongp{background:var(--red);color:#fff}
+.key{display:flex;gap:10px;align-items:center;background:linear-gradient(135deg,#e8f8d8,#fffbe0);border-radius:16px;padding:10px;margin-top:12px}
+.key svg{flex:0 0 64px}
+.key .kt{font-size:1rem;line-height:1.45}
+.plus{position:fixed;z-index:60;font-weight:800;font-size:1.4rem;pointer-events:none;animation:fly 1s forwards}
+@keyframes fly{to{transform:translateY(-50px);opacity:0}}
+.toast{position:fixed;left:50%;top:120px;transform:translateX(-50%);background:#333;color:#fff;padding:8px 16px;border-radius:99px;z-index:70;font-weight:700;animation:fly2 1.4s forwards}
+@keyframes fly2{0%{opacity:0}15%{opacity:1}80%{opacity:1}100%{opacity:0}}
+.bottombar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(212,239,184,.95) 30%)}
+.bottombar .in{max-width:480px;width:100%;display:flex;gap:10px}
+/* start */
+.mascot{display:block;margin:6px auto}
+.rule{display:flex;gap:10px;align-items:flex-start;margin:8px 0;font-size:1rem}
+.rule .n{flex:0 0 30px;height:30px;border-radius:50%;background:var(--sun);display:flex;align-items:center;justify-content:center;font-weight:800}
+/* result */
+.ansheet{background:#fffef7;border:2px solid #e5dcc0;border-radius:14px;padding:12px;font-size:.98rem}
+.ansheet h3{margin:10px 0 4px;color:var(--dk);font-size:1.05rem;border-bottom:2px dashed #e5dcc0;padding-bottom:3px}
+.ansheet .row{display:grid;grid-template-columns:34px 1fr 22px;gap:4px;padding:3px 0;align-items:start}
+.ansheet .row .r{color:#888}
+.ansheet .row .you{font-size:.85em;color:#a33}
+.ansheet .row .tag{font-size:.75em;color:#888}
+.stars{font-size:2.4rem;text-align:center;letter-spacing:4px}
+.big{font-size:2.2rem;font-weight:800;text-align:center;color:var(--dk)}
+.note{font-size:.9rem;background:#eef7ff;border-radius:12px;padding:8px 12px;margin-top:8px}
+.pill.c{background:#fff0c2;color:#8a5a00}
+.inv{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:4px;min-height:0}
+.inv span{background:#eef7ff;border-radius:99px;padding:1px 8px;font-size:.85rem;font-weight:700}
+.shop{display:grid;gap:10px;margin-top:8px}
+.item{display:flex;align-items:center;gap:10px;background:#fffbea;border:2px solid #f3e1a0;border-radius:16px;padding:10px}
+.item .ic{font-size:2rem;flex:0 0 44px;text-align:center}
+.item .tx{flex:1;font-size:.95rem;line-height:1.3}
+.item .tx b{font-size:1.02rem}
+.item button{background:var(--sun);color:#5a3b00;font-weight:800;border-radius:12px;padding:8px 10px;box-shadow:0 3px 0 #c99a00;white-space:nowrap}
+.item button:disabled{background:#ddd;color:#999;box-shadow:none}
+.coinbig{text-align:center;font-size:1.6rem;font-weight:800;color:#8a5a00}
+.code{font-size:1.8rem;letter-spacing:6px;font-weight:800;color:#b5179e;background:#fff0fa;border-radius:12px;padding:4px 10px;display:inline-block}
+.confetti{position:fixed;top:-20px;font-size:22px;z-index:80;animation:fall 2.6s linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+
+<!-- START -->
+<section id="scrStart">
+  <div class="card" style="text-align:center;margin-top:18px">
+    <div style="font-size:1rem;color:#5d6b58">Bahasa Melayu Tingkatan 5 · Penyuntingan</div>
+    <h1>🌾 Larian Bendang 🌾</h1>
+    <div class="zh">稻田赛跑 · 找错改错大挑战</div>
+    <svg class="mascot" id="mascotStart" width="130" height="120" viewBox="0 0 130 120"></svg>
+    <div style="font-size:1rem">Si Katak Bendang: <i>"Setiap kesalahan yang kamu betulkan, kamu berlari lebih jauh!"</i></div>
+  </div>
+  <div class="card">
+    <h2>Cara bermain <span class="zh">玩法</span></h2>
+    <div class="rule"><div class="n">1</div><div><b>Ketik</b> perkataan yang salah dalam petikan. <span class="zh">点出错误的词 (+5)</span></div></div>
+    <div class="rule"><div class="n">2</div><div><b>Taip</b> pembetulannya sendiri. <span class="zh">自己打出正确写法 (+10)</span></div></div>
+        <div class="rule"><div class="n">💡</div><div>Bantuan ada, tetapi markah dipotong. Ketik salah -1. <span class="zh">用提示会扣分，点错扣 1 分</span></div></div>
+    <div class="rule"><div class="n">🪙</div><div>Setiap mata yang kamu dapat = <b>Syiling Padi</b>. Selepas setiap petikan, belanja di <b>Kedai Bendang</b>. Baki syiling boleh ditukar hadiah dengan cikgu! <span class="zh">得分=金币，每段结束后可在商店买道具；剩下的金币可向老师换奖励</span></div></div>
+    <div class="rule"><div class="n">⏱</div><div>3 petikan · 21 kesalahan · 15 minit. Di akhir, kamu dapat <b>Kertas Jawapan</b> untuk ditangkap layar. <span class="zh">最后生成答案纸，截图交老师</span></div></div>
+  </div>
+  <div class="card">
+    <input type="text" id="pname" placeholder="Nama & kelas (cth: Aina 5A)" maxlength="30">
+    <div style="height:10px"></div>
+    <button class="btn" id="btnStart">Mula Berlari! 🏃</button>
+  </div>
+</section>
+
+<!-- GAME -->
+<section id="scrGame" class="hidden">
+  <div class="hud">
+    <div class="hudrow">
+      <span class="pill">⭐ <span id="score">0</span></span>
+      <span class="pill" id="stageLbl">Bahan 1</span>
+      <span class="pill c">🪙 <span id="coins">0</span></span>
+      <span class="pill t" id="timer">15:00</span>
+    </div>
+    <div class="track"><div class="mudline"></div><div class="runner" id="runner" style="left:2px">🏃</div><div class="flag">🏁</div></div>
+    <div class="stageTag" id="progLbl">0 / 21 dibetulkan</div>
+    <div class="inv" id="inv"></div>
+  </div>
+  <div class="card">
+    <div style="font-size:.95rem"><b id="srcLbl"></b></div>
+    <div class="zh" id="taskLbl"></div>
+    <div class="foundbar"><div class="dots" id="dots"></div><span style="font-weight:800" id="foundLbl"></span></div>
+  </div>
+  <div class="card"><div class="passage" id="passage"></div></div>
+  <div class="note" id="examNote"></div>
+</section>
+
+<!-- RESULT -->
+<section id="scrResult" class="hidden">
+  <div class="card" style="text-align:center">
+    <svg class="mascot" id="mascotEnd" width="110" height="100" viewBox="0 0 130 120"></svg>
+    <h1>🏁 Tamat Larian!</h1>
+    <div class="stars" id="stars"></div>
+    <div class="big"><span id="finalScore">0</span> <span style="font-size:1rem">mata</span></div>
+    <div id="finalSub" style="font-size:1rem"></div>
+  </div>
+  <div class="card" style="text-align:center">
+    <h2>🪙 Tukar Hadiah dengan Cikgu <span class="zh">向老师兑换奖励</span></h2>
+    <div class="coinbig">🪙 <span id="endCoins">0</span> Syiling Padi</div>
+    <div style="margin:6px 0">Kod pengesahan: <span class="code" id="vcode">----</span></div>
+    <div class="zh">截图给老师，老师核对验证码后兑换奖励</div>
+  </div>
+  <div class="card">
+    <h2>📝 Kertas Jawapan <span class="zh">答案纸（请截图）</span></h2>
+    <div class="ansheet" id="ansheet"></div>
+    <div class="note">✓ betul sendiri · 💡 guna bantuan · ✗ belum betul / tidak dijumpai<br><span class="zh">灰色字 = 正确答案</span></div>
+  </div>
+  <button class="btn sun" onclick="location.reload()">🔁 Main Semula</button>
+</section>
+</div>
+
+<div class="bottombar hidden" id="bottombar"><div class="in">
+  <button class="btn ghost sm" style="flex:1" id="btnWhere">💡 Di mana? (-3)</button>
+  <button class="btn sm" style="flex:1" id="btnNext">Seterusnya ➜</button>
+</div></div>
+
+<div class="overlay hidden" id="ov"><div class="sheet" id="sheet"></div></div>
+
+<script>
+/* ============ DATA (hanya daripada bahan guru) ============ */
+const JSI=["Ejaan","Imbuhan","Kata sendi nama","Hukum D-M","Istilah / pilihan kata","Laras bahasa istana","Ayat pasif","Kata penguat","Kata pemeri"];
+const E=(w,a,j,k,zh)=>({w,a,j,k,zh});
+const STAGES=[
+{ title:'Bahan 1', src:'Bahan 1 · Negeri Sembilan 2023 (Berita)', task:'Cari 9 kesalahan bahasa dalam berita ini · 找出 9 个错误',
+  exam:'📌 Peperiksaan sebenar: 6 markah — tulis <b>6 kesalahan sahaja</b>. <span class="zh">考试只能写 6 个</span>',
+  type:'text',
+  sents:[
+   ["KANGAR: Raja Muda Perlis Tuanku Syed Faizuddin Putra Jamalullail",E("bersetuju",["berkenan"],5,"Untuk kerabat diraja, guna laras bahasa istana: <b>berkenan</b>.","皇室成员要用宫廷用语"),"menyertai program Bendang Run 2019 yang bermula dan berakhir di dataran Jabatan Pengangkutan Jalan (JPJ) Perlis, Jejawi",E("disini",["di sini"],0,"Kata sendi nama <b>di</b> dieja terpisah daripada kata tempat: <b>di sini</b>.","表示地点的 di 要分开写"),"bersama-sama 1,200 orang peserta pada awal pagi tadi."],
+   ["Tuanku Syed Faizuddin Putra bertitah penganjuran larian itu",E("amat tepat sekali",["amat tepat","tepat sekali"],7,"Jangan guna dua kata penguat serentak: <b>amat tepat</b> atau <b>tepat sekali</b>.","两个程度副词不能同时用"),"pada masanya kerana program itu dilangsungkan dua minggu sebelum",E("Perlis Marathon",["Maraton Perlis"],3,"Hukum D-M: yang diterangkan di depan → <b>Maraton Perlis</b> (ejaan BM: maraton).","被修饰语在前，修饰语在后"),"2019 pada 27 April ini."],
+   ["Program itu ialah",E("penganjur",["anjuran"],1,"<b>Penganjur</b> = orang/pihak; <b>anjuran</b> = program yang dianjurkan.","penganjur 是人，anjuran 是活动"),"Kelab JPJ dan Jabatan Penyiaran Perlis bersempena dengan sambutan ulang tahun yang",E("ke 73",["ke-73"],0,"Nombor ordinal: <b>ke-</b> + angka mesti bersempang → <b>ke-73</b>.","ke + 数字要加连字号"),"."],
+   ["Pengarah JPJ Perlis, Shahrul Azhar berkata, larian itu bertujuan",E("menggalakan",["menggalakkan"],0,"galak + meN-…-kan → <b>menggalakkan</b> (dua huruf k).","galak + kan，要两个 k"),"budaya hidup sihat",E("di dalam kalangan",["dalam kalangan"],2,"<b>Kalangan</b> tidak didahului 'di dalam' — tulis <b>dalam kalangan</b>.","kalangan 前只用 dalam"),"masyarakat."],
+   ["Pada masa yang sama jabatan ini membantu dalam menyemarakkan lagi aktiviti",E("pelancungan",["pelancongan"],0,"Ejaan betul: <b>pelancongan</b> (kata dasar: lancong).","正确拼法 pelancongan"),"sukan di negeri ini."]
+  ]},
+{ title:'Bahan 2', src:'Bahan 2 · Negeri Sembilan 2023 (Poster)', task:'Cari 6 kesalahan bahasa dalam poster ini · 找出 6 个错误',
+  exam:'📌 Peperiksaan sebenar: 5 markah — tulis <b>5 kesalahan sahaja</b>. <span class="zh">考试只能写 5 个</span>',
+  type:'poster',
+  sents:[
+   ["Hadiah yang lumayan akan",E("penganjur sediakan",["disediakan oleh penganjur","akan disediakan oleh penganjur"],6,"Ayat pasif: <b>disediakan oleh penganjur</b>.","被动句：di- + 动词 + oleh"),"."],
+   ["1. Terbuka kepada",E("warga negara",["warganegara"],0,"<b>Warganegara</b> ialah kata majmuk yang dieja bercantum.","warganegara 要连写"),"Malaysia yang berani dan sihat."],
+   ["2.",E("Bidang",["Kategori"],4,"Untuk jenis penyertaan, istilah yang tepat ialah <b>kategori</b>.","参赛组别用 kategori"),"penyertaan ialah individu dan keluarga."],
+   ["3. Yuran penyertaan individu ialah RM10.00 manakala yuran untuk sebuah keluarga ialah",E("RM 20.00",["RM20.00"],0,"Simbol <b>RM</b> ditulis rapat dengan angka: <b>RM20.00</b> (sama seperti RM10.00).","RM 和数字之间不留空格"),"."],
+   ["4. Peserta yang",E("paling cepat sekali",["paling cepat","cepat sekali"],7,"<b>Paling</b> dan <b>sekali</b> tidak boleh digunakan serentak.","paling 和 sekali 不能一起用"),"tiba ke garisan penamat dikira sebagai pemenang."],
+   ["5. Tarikh tutup penyertaan",E("ialah",["adalah"],8,"<b>Ialah</b> tidak boleh diikuti kata sendi nama 'pada' — guna <b>adalah</b>.","ialah 后面不能接 pada"),"pada 10 Mac 2023 pukul 4.00 petang."]
+  ]},
+{ title:'Bahan 3', src:'Bahan 2 · Tangkak 2025 (Rencana)', task:'Cari 6 kesalahan bahasa dalam petikan ini · 找出 6 个错误',
+  exam:'📌 Peperiksaan sebenar: soalan minta <b>5 kesalahan sahaja</b> — jangan tulis lebih! <span class="zh">考试写超过规定数量不给分</span>',
+  type:'text',
+  sents:[
+   ["Pelbagai langkah",E("pro-aktif",["proaktif"],0,"<b>Proaktif</b> dieja bercantum, tanpa tanda sempang.","proaktif 不加连字号"),"telah dilakukan untuk menangani permasalahan yang sedang melanda ini."],
+   ["Setiap",E("golongan",["lapisan"],4,"Kolokasi yang tepat: <b>lapisan masyarakat</b>.","固定搭配：lapisan masyarakat"),"masyarakat, syarikat-syarikat swasta dan badan bukan kerajaan (NGO) turut mengambil inisiatif untuk memutuskan",E("rantai",["rantaian"],1,"Jangkitan yang bersambung = <b>rantaian</b> (rantai + -an).","传播链用 rantaian"),"wabak ini."],
+   ["Beberapa buah hotel telah dijadikan pusat kuarantin."],
+   ["Malah, terdapat hotel di Cyberjaya yang memberikan perkhidmatan sebagai pusat kuarantin",E("pada",["kepada"],2,"Untuk manusia yang menerima sesuatu, guna <b>kepada</b>.","对象是人时用 kepada"),"individu yang baru pulang dari",E("negara luar",["luar negara"],3,"Frasa yang betul: <b>luar negara</b>.","正确说法是 luar negara"),"."],
+   ["Kementerian Kesihatan juga telah membuat persiapan bagi menghadapi kemungkinan",E("menular",["penularan"],1,"Selepas 'kemungkinan' perlu kata nama: <b>penularan</b> (peN-…-an).","这里需要名词 penularan"),"wabak yang lebih serius."]
+  ]}
+];
+const SHOW=e=>e.a.filter(x=>!x.startsWith('akan ')).join(' / ');
+const ROMAN=["i","ii","iii","iv","v","vi","vii","viii","ix","x"];
+STAGES.forEach(st=>{st.errs=[];st.sents.forEach((s,si)=>s.forEach(p=>{if(typeof p!=='string'){p.si=si;p.idx=st.errs.length;p.st='new';p.you='';p.hint=0;p.jok=null;st.errs.push(p);}}));});
+const TOTAL=STAGES.reduce((a,s)=>a+s.errs.length,0), MAX=TOTAL*15;
+
+/* ============ MASCOT ============ */
+function frog(mood){const mouth=mood==='sad'?'M48 82 Q65 72 82 82':'M44 76 Q65 96 86 76';
+return `<ellipse cx="65" cy="110" rx="48" ry="7" fill="#000" opacity=".08"/>
+<ellipse cx="65" cy="75" rx="50" ry="36" fill="#7ccf4f"/><ellipse cx="65" cy="88" rx="34" ry="20" fill="#d9f5b8"/>
+<circle cx="40" cy="42" r="20" fill="#7ccf4f"/><circle cx="90" cy="42" r="20" fill="#7ccf4f"/>
+<circle cx="40" cy="42" r="12" fill="#fff"/><circle cx="90" cy="42" r="12" fill="#fff"/>
+<circle cx="43" cy="44" r="6" fill="#222"/><circle cx="93" cy="44" r="6" fill="#222"/><circle cx="45" cy="41" r="2" fill="#fff"/><circle cx="95" cy="41" r="2" fill="#fff"/>
+<circle cx="30" cy="70" r="6" fill="#ff9fb2" opacity=".7"/><circle cx="100" cy="70" r="6" fill="#ff9fb2" opacity=".7"/>
+<path d="${mouth}" stroke="#2c5e1a" stroke-width="4" fill="none" stroke-linecap="round"/>
+<path d="M20 30 Q65 0 110 30 L104 36 Q65 12 26 36Z" fill="#f2c14e"/><path d="M58 8 L65 -2 L72 8Z" fill="#f2c14e"/>
+<rect x="52" y="96" width="26" height="12" rx="4" fill="#ff6b6b"/><text x="65" y="106" font-size="10" text-anchor="middle" fill="#fff" font-weight="bold">21</text>`;}
+document.getElementById('mascotStart').innerHTML=frog();
+const frogMini=m=>`<svg width="64" height="60" viewBox="0 0 130 120">${frog(m)}</svg>`;
+
+/* ============ SOUND ============ */
+let AC=null;function beep(f,d=.12,type='sine',v=.15){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(AC.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+d);o.stop(AC.currentTime+d);}catch(e){}}
+const sGood=()=>{beep(660);setTimeout(()=>beep(880),90)}, sBad=()=>beep(180,.2,'square',.08), sWin=()=>[523,659,784,1046].forEach((f,i)=>setTimeout(()=>beep(f,.15),i*110));
+
+/* ============ STATE ============ */
+const $=id=>document.getElementById(id);
+let score=0,stage=0,timeLeft=15*60,tick=null,fixed=0,pname='',startT=0,ended=false;
+let coins=0,spent=0;const inv={time:0,hint:0,shield:0,letter:0,dbl:0};
+const ITEMS=[
+ {k:'time',ic:'⏱',n:'Masa Tambahan',d:'+60 saat serta-merta',zh:'立刻加 60 秒',p:30},
+ {k:'hint',ic:'💡',n:'Di Mana? Percuma',d:'Guna "Di mana?" tanpa potong mata',zh:'免费找错提示 1 次',p:20},
+ {k:'letter',ic:'🔤',n:'Huruf Awal Percuma',d:'Bantuan huruf awal tanpa potong mata',zh:'免费首字母提示 1 次',p:20},
+ {k:'shield',ic:'🛡',n:'Perisai',d:'Ketik salah sekali, tiada potongan',zh:'点错一次不扣分',p:15},
+ {k:'dbl',ic:'✖2',n:'Ganda Dua',d:'3 pembetulan seterusnya: mata & syiling ×2',zh:'接下来 3 题双倍',p:40}];
+function renderInv(){$('coins').textContent=coins;const L=[];if(inv.hint)L.push(`💡×${inv.hint}`);if(inv.letter)L.push(`🔤×${inv.letter}`);if(inv.shield)L.push(`🛡×${inv.shield}`);if(inv.dbl)L.push(`✖2 (${inv.dbl} lagi)`);$('inv').innerHTML=L.map(x=>`<span>${x}</span>`).join('');
+ $('btnWhere').textContent=inv.hint?`💡 Di mana? (Percuma ×${inv.hint})`:'💡 Di mana? (-3)';}
+function openShop(next){const S=$('sheet');$('ov').classList.remove('hidden');$('ov').classList.add('center');
+ const draw=()=>{S.innerHTML=`<h2 style="text-align:center">🛒 Kedai Bendang <span class="zh">稻田商店</span></h2>
+ <div class="coinbig">🪙 ${coins}</div><div class="zh" style="text-align:center">买道具用金币，不会扣分数；没用完的金币可以向老师换奖励</div>
+ <div class="shop">${ITEMS.map((it,i)=>`<div class="item"><div class="ic">${it.ic}</div><div class="tx"><b>${it.n}</b><br>${it.d}<br><span class="zh">${it.zh}</span></div><button data-i="${i}" ${coins<it.p?'disabled':''}>🪙 ${it.p}</button></div>`).join('')}</div>
+ <div style="height:12px"></div><button class="btn" id="shopGo">Mula ${STAGES[stage+1].title} ➜</button>`;
+ S.querySelectorAll('.item button').forEach(b=>b.onclick=()=>{const it=ITEMS[+b.dataset.i];if(coins<it.p)return;coins-=it.p;spent+=it.p;
+   if(it.k==='time')timeLeft+=60;else if(it.k==='dbl')inv.dbl+=3;else inv[it.k]++;sGood();renderInv();toast(`Dibeli: ${it.ic} ${it.n}`);draw();});
+ $('shopGo').onclick=()=>{$('ov').classList.add('hidden');next();};};
+ draw();}
+function goNext(){if(stage<2)openShop(()=>loadStage(stage+1));else finish(false);}
+function vcode(name,c,d){let h=5381;const t=`${name.toLowerCase().replace(/\s+/g,'')}|${c}|${d}|LB-F5`;for(const ch of t)h=((h<<5)+h+ch.charCodeAt(0))>>>0;return h.toString(36).toUpperCase().slice(-4).padStart(4,'0');}
+const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
+function addScore(n,el){if(n>0){coins+=n;renderInv();}score=Math.max(0,score+n);$('score').textContent=score;if(el){const r=el.getBoundingClientRect(),p=document.createElement('div');p.className='plus';p.textContent=(n>0?'+':'-')+Math.abs(n);p.style.color=n>0?'#4c9a2a':'#ff6b6b';p.style.left=(r.left+r.width/2-10)+'px';p.style.top=(r.top-6)+'px';document.body.appendChild(p);setTimeout(()=>p.remove(),1000);}}
+function toast(t){const d=document.createElement('div');d.className='toast';d.innerHTML=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1400);}
+const norm=s=>s.toLowerCase().replace(/[“”"'.,!?;:()]/g,m=>m==='.'?'.':'').replace(/\s+/g,' ').trim().replace(/\.$/,'').replace(/\s*-\s*/g,'-');
+const ok=(e,v)=>{const n=norm(v);return e.a.some(a=>norm(a)===n)};
+
+$('btnStart').onclick=()=>{if($('pname').value.trim().toLowerCase()==='#cikgu'){teacher();return;}pname=$('pname').value.trim()||'Pelari';$('scrStart').classList.add('hidden');$('scrGame').classList.remove('hidden');$('bottombar').classList.remove('hidden');startT=Date.now();loadStage(0);
+ tick=setInterval(()=>{timeLeft--;const m=Math.floor(timeLeft/60),s=timeLeft%60;$('timer').textContent=`${m}:${String(s).padStart(2,'0')}`;$('timer').classList.toggle('low',timeLeft<=60);if(timeLeft<=0)finish(true);},1000);};
+
+function teacher(){const S=$('sheet');$('ov').classList.remove('hidden');$('ov').classList.add('center');
+ S.innerHTML=`<h2>👩‍🏫 Semak Kod <span class="zh">老师核对验证码</span></h2><div class="zh">照学生截图输入（名字照写，大小写和空格没关系）</div>
+ <input type="text" id="tN" placeholder="Nama & kelas"><div style="height:8px"></div><input type="text" id="tC" placeholder="Syiling (cth 180)" inputmode="numeric">
+ <div style="height:8px"></div><input type="text" id="tD" value="${today()}"><div style="height:8px"></div><input type="text" id="tK" placeholder="Kod 4 huruf">
+ <div class="msg" id="tM"></div><button class="btn" id="tGo">Semak</button><div style="height:8px"></div><button class="btn ghost" onclick="$('ov').classList.add('hidden')">Tutup</button>`;
+ $('tGo').onclick=()=>{const good=vcode($('tN').value.trim(),+$('tC').value,$('tD').value.trim())===$('tK').value.trim().toUpperCase();$('tM').className='msg '+(good?'yes':'no');$('tM').innerHTML=good?'✅ Sah! 验证码正确':'❌ Tidak sah 验证码不符';};}
+
+/* ============ STAGE ============ */
+function loadStage(i){stage=i;const st=STAGES[i];$('stageLbl').textContent=st.title+' / 3';$('srcLbl').textContent=st.src;$('taskLbl').textContent=st.task;$('examNote').innerHTML=st.exam;
+ const P=$('passage');P.innerHTML='';
+ let html='';
+ const renderSent=(s,si)=>{let h=`<span class="s" data-si="${si}">`;s.forEach((p,pi)=>{
+   if(typeof p==='string'){const lead=/^[.,;:]/.test(p)?'':(pi?' ':'');h+=lead+p.split(' ').map(w=>w===''?'':(/^[.,;:]$/.test(w)?w:`<span class="w">${w}</span>`)).join(' ');}
+   else{h+=(pi?' ':'')+`<span class="w err" data-e="${p.idx}">${p.w}</span>`;}
+ });return h+'</span> ';};
+ if(st.type==='poster'){
+   html=`<div class="poster"><div class="ttl">LARIAN BENDANG DI LONDAH</div>
+   <div class="prize">HADIAH KESELURUHAN<br><b>RM20,000</b><br>${renderSent(st.sents[0],0)}</div>
+   <div class="syarat">SYARAT-SYARAT PENYERTAAN</div>${st.sents.slice(1).map((s,k)=>renderSent(s,k+1)).join('')}
+   <div class="foot">🌐 londahnegerisembilan.com · ☎ Ashraf / Diana</div></div>`;
+ } else html=st.sents.map(renderSent).join('');
+ P.innerHTML=html;
+ P.querySelectorAll('.w').forEach(w=>w.onclick=()=>tapWord(w));
+ updateFound();window.scrollTo({top:0,behavior:'smooth'});
+ $('btnNext').textContent=i<2?'Petikan seterusnya ➜':'Tamat ➜';
+}
+function updateFound(){const st=STAGES[stage];$('dots').innerHTML=st.errs.map(e=>`<span class="${e.st==='done'||e.st==='help'?'ok':(e.st==='new'?'':'on')}"></span>`).join('');
+ const f=st.errs.filter(e=>e.st!=='new').length;$('foundLbl').textContent=`${f} / ${st.errs.length} dijumpai`;
+ $('progLbl').textContent=`${fixed} / ${TOTAL} dibetulkan`;$('runner').style.left=`calc(${fixed/TOTAL*86}% + 2px)`;}
+
+function tapWord(w){if(ended)return;
+ if(!w.classList.contains('err')){if(w.classList.contains('bad'))return;w.classList.add('bad');sBad();if(inv.shield){inv.shield--;renderInv();toast('🛡 Perisai melindungi kamu! <span class="zh">不扣分</span>');}else{addScore(-1,w);toast('Bukan kesalahan 😅 <span class="zh">这里没错</span>');}setTimeout(()=>w.classList.remove('bad'),500);return;}
+ const e=STAGES[stage].errs[+w.dataset.e];if(e.st!=='new')return;
+ e.st='found';w.classList.add('found');sGood();addScore(5,w);updateFound();openFix(e,w);}
+
+/* ============ FIX SHEET ============ */
+function ctxHTML(e){return STAGES[stage].sents[e.si].map(p=>typeof p==='string'?p:(p===e?`<mark>${p.w}</mark>`:p.w)).join(' ').replace(/ ([.,])/g,'$1');}
+function openFix(e,el){let tries=0,usedA=false,usedB=false;
+ const S=$('sheet');$('ov').classList.remove('hidden','center');
+ S.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><h2>✏️ Betulkan! <span class="zh">改正</span></h2><span class="pill">+10</span></div>
+ <div class="wrongbox">Salah: <s>${e.w}</s></div><div class="ctx">“${ctxHTML(e)}”</div>
+ <input type="text" id="fixIn" placeholder="Taip pembetulan di sini…" autocomplete="off" autocapitalize="off" spellcheck="false">
+ <div class="msg" id="fixMsg"></div>
+ <button class="btn" id="fixGo">Semak ✔</button>
+ <div class="hints"><button id="hA">🔍 Jenis kesalahan (-3)</button><button id="hB">🔤 Huruf awal (${inv.letter?'Percuma':'-4'})</button></div>
+ <div id="hintArea"></div>`;
+ const inp=$('fixIn');setTimeout(()=>inp.focus(),250);
+ $('hA').onclick=()=>{usedA=true;$('hA').disabled=true;e.hint=Math.max(e.hint,1);addScore(-3,$('hA'));$('hintArea').innerHTML+=`<div class="hintmsg">🔍 Jenis kesalahan: <b>${JSI[e.j]}</b></div>`;};
+ $('hB').onclick=()=>{usedB=true;$('hB').disabled=true;e.hint=2;if(inv.letter){inv.letter--;renderInv();}else addScore(-4,$('hB'));const a=e.a[0];const pat=a.split('').map((c,i)=>i===0?c.toUpperCase():(c===' '?'&nbsp;&nbsp;':(c==='-'||c==='.'?c:'_'))).join(' ');$('hintArea').innerHTML+=`<div class="hintmsg">🔤 <span style="letter-spacing:2px;font-weight:800">${pat}</span></div>`;};
+ const go=()=>{const v=inp.value.trim();if(!v)return;e.you=v;
+   if(ok(e,v)){let pts=10;if(inv.dbl){pts=20;inv.dbl--;renderInv();}addScore(pts,$('fixGo'));sGood();fixed++;e.st=(usedA||usedB)?'help':'done';finishFix(e,el,usedA);}
+   else{tries++;sBad();inp.value='';
+     if(tries>=3){e.st='missed';$('fixMsg').className='msg no';$('fixMsg').innerHTML=`Jawapan: <b>${e.a[0]}</b> <span class="zh">记住它！</span>`;
+       $('fixGo').textContent='Faham, teruskan ➜';$('fixGo').onclick=()=>finishFix(e,el,usedA);inp.disabled=true;$('hA').disabled=$('hB').disabled=true;}
+     else{$('fixMsg').className='msg no';$('fixMsg').innerHTML=`Belum tepat, cuba lagi (${3-tries} peluang) <span class="zh">再试一次</span>`;}}
+   updateFound();};
+ $('fixGo').onclick=go;inp.onkeydown=ev=>{if(ev.key==='Enter')go();};
+}
+function finishFix(e,el,usedA){el.classList.remove('found');el.classList.add('done');el.dataset.fix=SHOW(e).split(' / ')[0];showKey(e);}
+function showKey(e){const S=$('sheet');const good=e.st==='done';
+ S.innerHTML=`<h2>${good?'Hebat! 🎉':(e.st==='help'?'Bagus! 👍':'Tidak mengapa 💪')}</h2>
+ <div class="wrongbox"><s>${e.w}</s> → <b style="color:#4c9a2a">${SHOW(e)}</b></div>
+ <div class="key">${frogMini(e.st==='missed'?'sad':'')}<div class="kt">⭐ ${e.k}<br><span class="zh">${e.zh}</span></div></div>
+ <div style="height:12px"></div><button class="btn" id="keyGo">Teruskan berlari 🏃</button>`;
+ $('keyGo').onclick=()=>{$('ov').classList.add('hidden');updateFound();
+   const st=STAGES[stage];if(st.errs.every(x=>x.st!=='new'&&x.st!=='found')){sWin();setTimeout(()=>stageDone(),300);}};
+}
+function stageDone(){const st=STAGES[stage];const S=$('sheet');$('ov').classList.remove('hidden');$('ov').classList.add('center');
+ const n=st.errs.filter(e=>e.st==='done'||e.st==='help').length;
+ S.innerHTML=`<div style="text-align:center">${frogMini()}<h2>${st.title} selesai! 🎊</h2><div style="font-size:1.1rem">Dibetulkan: <b>${n} / ${st.errs.length}</b></div>
+ <div class="note" style="text-align:left">${st.exam}</div><div style="height:12px"></div>
+ <button class="btn sun" id="sdGo">${stage<2?'Ke Kedai Bendang 🛒':'Lihat Kertas Jawapan 📝'}</button></div>`;
+ $('sdGo').onclick=()=>{$('ov').classList.add('hidden');goNext();};
+}
+$('btnNext').onclick=()=>{const st=STAGES[stage];const left=st.errs.filter(e=>e.st==='new').length;
+ const S=$('sheet');$('ov').classList.remove('hidden');$('ov').classList.add('center');
+ S.innerHTML=`<div style="text-align:center"><h2>${left?`Masih ada ${left} kesalahan!`:'Teruskan?'}</h2><div class="zh">${left?`还有 ${left} 个错误没找到，确定离开吗？`:''}</div><div style="height:12px"></div>
+ <button class="btn ghost" id="nNo">Cari lagi 🔍</button><div style="height:10px"></div><button class="btn" id="nYes">Ya, ${stage<2?'petikan seterusnya':'tamat'} ➜</button></div>`;
+ $('nNo').onclick=()=>$('ov').classList.add('hidden');
+ $('nYes').onclick=()=>{$('ov').classList.add('hidden');goNext();};};
+$('btnWhere').onclick=()=>{const st=STAGES[stage];const e=st.errs.find(x=>x.st==='new');if(!e){toast('Semua sudah dijumpai! ✅');return;}
+ if(inv.hint){inv.hint--;renderInv();}else addScore(-3,$('btnWhere'));const s=document.querySelector(`#passage .s[data-si="${e.si}"]`);s.classList.add('hl');s.scrollIntoView({behavior:'smooth',block:'center'});
+ toast('Ada kesalahan dalam ayat berwarna kuning 👀');setTimeout(()=>s.classList.remove('hl'),3500);};
+
+/* ============ RESULT ============ */
+function finish(timeout){if(ended)return;ended=true;clearInterval(tick);$('ov').classList.add('hidden');$('bottombar').classList.add('hidden');
+ $('scrGame').classList.add('hidden');$('scrResult').classList.remove('hidden');window.scrollTo(0,0);
+ $('mascotEnd').innerHTML=frog();$('finalScore').textContent=score;
+ const pct=Math.min(1,score/MAX);$('stars').textContent=pct>=.8?'⭐⭐⭐':pct>=.55?'⭐⭐☆':pct>=.3?'⭐☆☆':'☆☆☆';
+ const used=Math.round((Date.now()-startT)/1000);const self=STAGES.flatMap(s=>s.errs).filter(e=>e.st==='done').length;
+ $('finalSub').innerHTML=`<b>${pname}</b> · ${today()}<br>Betul sendiri: ${self}/${TOTAL} · Masa: ${Math.floor(used/60)} min ${used%60} s${timeout?'<br>⏰ Masa tamat!':''}`;
+ let h='';STAGES.forEach(st=>{h+=`<h3>${st.src}</h3>`;st.errs.forEach((e,i)=>{
+   const icon=e.st==='done'?'✓':e.st==='help'?'💡':'✗';
+   const right=e.st==='done'||e.st==='help';
+   h+=`<div class="row"><span class="r">(${ROMAN[i]})</span><span>${e.w} – <b style="color:${right?'#2d7a1a':'#999'}">${SHOW(e)}</b>${!right&&e.you?`<br><span class="you">Jawapan kamu: ${e.you}</span>`:''}${e.st==='new'?'<br><span class="tag">tidak dijumpai</span>':''}</span><span>${icon}</span></div>`;});});
+ $('ansheet').innerHTML=h;$('endCoins').textContent=coins;$('vcode').textContent=vcode(pname,coins,today());
+ if(pct>=.55){sWin();for(let i=0;i<30;i++){const c=document.createElement('div');c.className='confetti';c.textContent=['🌾','⭐','🎉','🐸'][i%4];c.style.left=Math.random()*100+'vw';c.style.animationDelay=Math.random()*1.2+'s';document.body.appendChild(c);setTimeout(()=>c.remove(),4200);}}
+}
+</script>
+</body>
+</html>
