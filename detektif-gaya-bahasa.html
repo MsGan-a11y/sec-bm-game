@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Detektif Gaya Bahasa 🕵️</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#2b2d5c; --bg2:#4b3f8f; --paper:#fff8e7; --ink:#2b2340;
+  --gold:#ffc94d; --pink:#ff7aa8; --mint:#4fd1a5; --red:#ff5d5d; --blue:#5aa9ff;
+  --card:#ffffff; --muted:#7a7090;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;min-height:100%}
+body{
+  font-family:'Waknan','Baloo 2','ZCOOL KuaiLe',sans-serif;
+  color:var(--ink);
+  background:radial-gradient(circle at 20% 10%,#5a4fb0 0,transparent 40%),
+             radial-gradient(circle at 90% 80%,#7b3f8f 0,transparent 45%),
+             linear-gradient(160deg,var(--bg1),var(--bg2));
+  min-height:100vh;
+}
+.zh{font-family:'Waknan','ZCOOL KuaiLe','Baloo 2',sans-serif}
+#app{max-width:480px;margin:0 auto;padding:14px 16px 28px;min-height:100vh;position:relative}
+.screen{display:none;animation:pop .35s ease}
+.screen.active{display:block}
+@keyframes pop{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes stamp{0%{transform:scale(3) rotate(-20deg);opacity:0}70%{transform:scale(.9) rotate(-12deg);opacity:1}100%{transform:scale(1) rotate(-12deg)}}
+@keyframes twinkle{0%,100%{opacity:.3}50%{opacity:1}}
+
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0}
+.stars span{position:absolute;color:#fff;font-size:10px;animation:twinkle 2.5s infinite}
+#app>*{position:relative;z-index:1}
+
+.panel{background:var(--paper);border-radius:22px;padding:18px 16px;box-shadow:0 8px 0 rgba(0,0,0,.18),0 14px 30px rgba(0,0,0,.25);border:3px solid #2b2340}
+h1{margin:4px 0 2px;font-size:30px;line-height:1.1;text-align:center;color:#fff;text-shadow:0 3px 0 #2b2340,0 0 18px rgba(255,201,77,.6)}
+.subtitle{text-align:center;color:var(--gold);font-size:15px;margin-bottom:10px}
+.mascot{display:block;margin:0 auto;width:150px;animation:bob 2.4s ease-in-out infinite}
+.mascot.sm{width:70px}
+.btn{display:block;width:100%;border:3px solid #2b2340;border-radius:16px;padding:13px 14px;font:inherit;font-size:19px;font-weight:800;cursor:pointer;background:var(--gold);color:#2b2340;box-shadow:0 5px 0 #2b2340;transition:transform .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #2b2340}
+.btn.pink{background:var(--pink)} .btn.mint{background:var(--mint)} .btn.ghost{background:#fff}
+.btn+.btn{margin-top:12px}
+.howto{font-size:15px;line-height:1.55;margin:10px 0 14px}
+.howto li{margin-bottom:4px}
+.tag{display:inline-block;background:#2b2340;color:#fff;border-radius:10px;padding:1px 8px;font-size:13px}
+
+/* dossier */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.suspect{background:#fff;border:2.5px solid #2b2340;border-radius:14px;padding:8px;text-align:center;position:relative;overflow:hidden}
+.suspect .em{font-size:30px}
+.suspect b{display:block;font-size:16px}
+.suspect .zh{font-size:13px;color:#7b3f8f}
+.suspect .tr{font-size:12px;color:var(--muted);line-height:1.3;margin-top:3px}
+.suspect.caught::after{content:"DITANGKAP";position:absolute;top:38%;left:-8%;right:-8%;background:var(--red);color:#fff;font-size:13px;font-weight:800;transform:rotate(-14deg);letter-spacing:1px}
+
+/* hud */
+.hud{display:flex;justify-content:space-between;align-items:center;color:#fff;font-weight:800;font-size:15px;margin-bottom:8px}
+.hud .pill{background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.35);border-radius:999px;padding:4px 11px}
+.progress{height:10px;background:rgba(255,255,255,.2);border-radius:99px;overflow:hidden;margin-bottom:10px}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--mint),var(--gold));width:0;transition:width .4s}
+.casebar{display:flex;align-items:center;gap:8px;color:#fff;margin-bottom:10px}
+.casebar .ttl{font-size:16px;font-weight:800;line-height:1.2}
+.casebar .ttl small{display:block;color:var(--gold);font-weight:500;font-size:13px}
+
+.timer{position:relative;height:14px;background:#e9e0cc;border-radius:99px;overflow:hidden;border:2px solid #2b2340;margin-bottom:12px}
+.timer i{position:absolute;left:0;top:0;bottom:0;background:var(--mint);width:100%}
+.timer i.warn{background:var(--red)}
+.qtype{font-size:13px;font-weight:800;color:#7b3f8f;letter-spacing:.5px;margin-bottom:4px}
+.question{font-size:19px;font-weight:800;line-height:1.35;margin-bottom:10px}
+.evidence{background:#fffef8;border:2px dashed #b9a77a;border-radius:12px;padding:10px 12px;font-size:18px;line-height:1.55;margin-bottom:12px;position:relative;font-style:italic}
+.evidence::before{content:"📜 BAHAN BUKTI";display:block;font-style:normal;font-size:11px;font-weight:800;color:#a08a4f;letter-spacing:1px;margin-bottom:2px}
+.opts{display:grid;gap:10px}
+.opt{border:3px solid #2b2340;background:#fff;border-radius:14px;padding:12px;font:inherit;font-size:18px;font-weight:700;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;box-shadow:0 4px 0 #2b2340;color:var(--ink)}
+.opt .k{flex:none;width:30px;height:30px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:800;border:2px solid #2b2340}
+.opt:active{transform:translateY(3px);box-shadow:0 1px 0 #2b2340}
+.opt.right{background:#d6ffe9;border-color:#1f9a6b}
+.opt.right .k{background:var(--mint)}
+.opt.wrong{background:#ffe0e0;border-color:#c43a3a;animation:shake .35s}
+.opt.wrong .k{background:var(--red);color:#fff}
+.opt.gone{opacity:.25;pointer-events:none;text-decoration:line-through}
+.opt[disabled]{cursor:default}
+.tools{display:flex;gap:10px;margin-top:14px}
+.tool{flex:1;border:2.5px solid #2b2340;border-radius:12px;padding:8px 6px;font:inherit;font-size:14px;font-weight:800;background:#efe6ff;cursor:pointer;color:#2b2340;line-height:1.2}
+.tool small{display:block;font-weight:500;font-size:11px;color:var(--muted)}
+.tool:disabled{opacity:.4;cursor:default}
+.hintbox{display:none;margin-top:12px;background:#fff3c4;border:2px solid #e3b623;border-radius:12px;padding:10px 12px;font-size:15px;line-height:1.45}
+.hintbox.show{display:block;animation:pop .3s}
+
+/* feedback */
+.overlay{position:fixed;inset:0;background:rgba(20,15,40,.65);display:none;align-items:flex-end;justify-content:center;z-index:50}
+.overlay.show{display:flex}
+.sheet{width:100%;max-width:480px;background:var(--paper);border-radius:24px 24px 0 0;border:3px solid #2b2340;border-bottom:none;padding:18px 18px 24px;animation:slideup .3s ease}
+@keyframes slideup{from{transform:translateY(100%)}to{transform:none}}
+.verdict{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800;margin-bottom:8px}
+.verdict.ok{color:#1f9a6b} .verdict.no{color:#c43a3a}
+.note{background:#fff;border:2.5px solid #2b2340;border-radius:14px;padding:10px 12px;font-size:16px;line-height:1.5;margin-bottom:14px}
+.note b.lbl{display:block;font-size:12px;color:#7b3f8f;letter-spacing:1px}
+.pts{font-size:15px;color:var(--muted);margin-bottom:10px}
+
+/* case intro / solved */
+.caseno{font-size:14px;letter-spacing:2px;color:#7b3f8f;font-weight:800;text-align:center}
+.casetitle{font-size:26px;font-weight:800;text-align:center;line-height:1.15;margin:4px 0}
+.casezh{text-align:center;color:var(--muted);font-size:15px;margin-bottom:10px}
+.story{font-size:16px;line-height:1.55;background:#fff;border-radius:14px;border:2px solid #e2d6b6;padding:10px 12px;margin-bottom:14px}
+.suspects-line{display:flex;justify-content:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.suspects-line span{background:#fff;border:2px solid #2b2340;border-radius:12px;padding:4px 8px;font-size:14px;font-weight:700}
+.stampwrap{text-align:center;margin:10px 0 14px}
+.stamp{display:inline-block;border:5px solid var(--red);color:var(--red);font-weight:800;font-size:30px;padding:4px 16px;border-radius:12px;transform:rotate(-12deg);animation:stamp .5s ease forwards;letter-spacing:2px}
+
+/* end */
+.bigscore{text-align:center;font-size:54px;font-weight:800;line-height:1;color:#2b2340}
+.rank{text-align:center;font-size:22px;font-weight:800;margin:6px 0 2px}
+.rankzh{text-align:center;color:var(--muted);margin-bottom:10px}
+.starsrow{text-align:center;font-size:36px;letter-spacing:4px;margin:6px 0}
+.review{margin-top:12px}
+.review .item{background:#fff;border:2px solid #e2d6b6;border-radius:12px;padding:8px 10px;margin-bottom:8px;font-size:14px;line-height:1.45}
+.review .item b{color:#c43a3a}
+.confetti{position:fixed;top:-20px;font-size:22px;z-index:60;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+.foot{text-align:center;color:rgba(255,255,255,.6);font-size:12px;margin-top:14px}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div id="app">
+
+  <!-- START -->
+  <section class="screen active" id="s-start">
+    <div class="subtitle" style="margin-top:6px">Bahasa Melayu · Gaya Bahasa</div>
+    <h1>Detektif<br>Gaya Bahasa</h1>
+    <div class="subtitle zh">修辞侦探破案记</div>
+    <div id="mascotBig"></div>
+    <div class="panel" style="margin-top:10px">
+      <div class="zh howto">
+        <b>🐱 Inspektor Miko 求救！</b><br>
+        11 个“修辞嫌犯”偷偷混进了诗集王国的诗句里。请你当小侦探，看线索、找证据，把它们一个个抓回档案柜！
+        <ul style="padding-left:20px;margin:8px 0 0">
+          <li>共 <b>5 个案件</b>，每个案件 3 题，共 15 题</li>
+          <li>每题 <span class="tag">20 秒</span>，越快答对分数越高</li>
+          <li>💡 <b>Petunjuk</b>：看提示，该题分数减半</li>
+          <li>🔍 <b>Kanta Ajaib</b>：删掉 2 个错误选项，每个案件只能用 1 次</li>
+        </ul>
+      </div>
+      <button class="btn" onclick="startGame()">🕵️ Mula Siasat! <span class="zh">开始破案</span></button>
+      <button class="btn ghost" onclick="show('s-dossier')">📁 Fail Suspek <span class="zh">先看嫌犯档案</span></button>
+    </div>
+    <div class="foot">SEC BM Game · Gaya Bahasa</div>
+  </section>
+
+  <!-- DOSSIER -->
+  <section class="screen" id="s-dossier">
+    <h1 style="font-size:26px">📁 Fail Suspek</h1>
+    <div class="subtitle zh">嫌犯档案：先记住它们的“犯罪特征”</div>
+    <div class="grid" id="dossierGrid"></div>
+    <button class="btn" onclick="backFromDossier()">⬅️ Kembali <span class="zh">返回</span></button>
+  </section>
+
+  <!-- CASE INTRO -->
+  <section class="screen" id="s-case">
+    <div class="panel">
+      <div class="caseno" id="caseNo">KES 1 / 5</div>
+      <div class="casetitle" id="caseTitle"></div>
+      <div class="casezh zh" id="caseZh"></div>
+      <div id="mascotSm" style="text-align:center"></div>
+      <div class="story zh" id="caseStory"></div>
+      <div class="suspects-line" id="caseSuspects"></div>
+      <button class="btn pink" onclick="beginCase()">🔎 Siasat Sekarang <span class="zh">开始调查</span></button>
+    </div>
+  </section>
+
+  <!-- QUESTION -->
+  <section class="screen" id="s-q">
+    <div class="hud">
+      <span class="pill">⭐ <span id="score">0</span></span>
+      <span class="pill">🔍 x<span id="lens">1</span></span>
+      <span class="pill">Soalan <span id="qnum">1</span>/15</span>
+    </div>
+    <div class="progress"><i id="prog"></i></div>
+    <div class="casebar">
+      <div style="font-size:30px" id="caseEm">🕵️</div>
+      <div class="ttl" id="caseBarTtl"></div>
+    </div>
+    <div class="panel">
+      <div class="timer"><i id="timerBar"></i></div>
+      <div class="qtype" id="qtype"></div>
+      <div class="question" id="qtext"></div>
+      <div class="evidence" id="qev"></div>
+      <div class="opts" id="opts"></div>
+      <div class="tools">
+        <button class="tool" id="btnHint" onclick="useHint()">💡 Petunjuk<small class="zh">看提示（分数减半）</small></button>
+        <button class="tool" id="btnLens" onclick="useLens()">🔍 Kanta Ajaib<small class="zh">删 2 个错误选项</small></button>
+      </div>
+      <div class="hintbox" id="hintbox"></div>
+    </div>
+  </section>
+
+  <!-- CASE SOLVED -->
+  <section class="screen" id="s-solved">
+    <div class="panel">
+      <div class="caseno" id="solvedNo"></div>
+      <div class="stampwrap"><span class="stamp">KES SELESAI!</span></div>
+      <div class="casezh zh">案件破了！你抓到这些嫌犯：</div>
+      <div class="suspects-line" id="solvedSuspects"></div>
+      <div class="pts" style="text-align:center" id="solvedPts"></div>
+      <button class="btn mint" id="btnNextCase" onclick="nextCase()">➡️ Kes Seterusnya <span class="zh">下一个案件</span></button>
+    </div>
+  </section>
+
+  <!-- END -->
+  <section class="screen" id="s-end">
+    <h1 style="font-size:26px">🏅 Laporan Akhir</h1>
+    <div class="subtitle zh">结案报告</div>
+    <div class="panel">
+      <div id="mascotEnd" style="text-align:center"></div>
+      <div class="starsrow" id="endStars"></div>
+      <div class="bigscore" id="endScore">0</div>
+      <div class="pts" style="text-align:center" id="endCorrect"></div>
+      <div class="rank" id="endRank"></div>
+      <div class="rankzh zh" id="endRankZh"></div>
+      <div class="review" id="review"></div>
+      <button class="btn" onclick="startGame()">🔁 Main Lagi <span class="zh">再玩一次</span></button>
+      <button class="btn ghost" onclick="show('s-dossier')">📁 Ulang Kaji Fail Suspek <span class="zh">复习档案</span></button>
+    </div>
+  </section>
+</div>
+
+<!-- FEEDBACK -->
+<div class="overlay" id="fb">
+  <div class="sheet">
+    <div class="verdict" id="fbVerdict"></div>
+    <div class="pts" id="fbPts"></div>
+    <div class="note"><b class="lbl">📒 NOTA KES · 破案笔记</b><span id="fbNote"></span></div>
+    <button class="btn" onclick="nextQ()">Teruskan ➜ <span class="zh">继续</span></button>
+  </div>
+</div>
+
+<script>
+/* ---------- Mascot (SVG cat detective) ---------- */
+function mascotSVG(mood){
+  const mouth = mood==='sad'
+    ? '<path d="M88 122 Q100 112 112 122" stroke="#2b2340" stroke-width="4" fill="none" stroke-linecap="round"/>'
+    : '<path d="M88 116 Q100 128 112 116" stroke="#2b2340" stroke-width="4" fill="none" stroke-linecap="round"/>';
+  return `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="100" cy="188" rx="58" ry="8" fill="rgba(0,0,0,.18)"/>
+  <rect x="62" y="140" width="76" height="46" rx="22" fill="#a0784a" stroke="#2b2340" stroke-width="4"/>
+  <path d="M100 142 L100 186" stroke="#2b2340" stroke-width="3"/>
+  <circle cx="93" cy="158" r="3" fill="#2b2340"/><circle cx="93" cy="172" r="3" fill="#2b2340"/>
+  <polygon points="52,62 66,22 88,52" fill="#ffd9a8" stroke="#2b2340" stroke-width="4" stroke-linejoin="round"/>
+  <polygon points="148,62 134,22 112,52" fill="#ffd9a8" stroke="#2b2340" stroke-width="4" stroke-linejoin="round"/>
+  <polygon points="60,54 67,34 78,50" fill="#ff9fbf"/>
+  <polygon points="140,54 133,34 122,50" fill="#ff9fbf"/>
+  <ellipse cx="100" cy="98" rx="56" ry="48" fill="#ffd9a8" stroke="#2b2340" stroke-width="4"/>
+  <path d="M46 62 Q100 18 154 62 Q100 50 46 62Z" fill="#8b6a3e" stroke="#2b2340" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M40 64 Q100 46 160 64" stroke="#2b2340" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <rect x="92" y="34" width="16" height="10" rx="3" fill="#ff7aa8" stroke="#2b2340" stroke-width="3"/>
+  <circle cx="80" cy="96" r="9" fill="#2b2340"/><circle cx="83" cy="93" r="3" fill="#fff"/>
+  <circle cx="120" cy="96" r="9" fill="#2b2340"/><circle cx="123" cy="93" r="3" fill="#fff"/>
+  <ellipse cx="68" cy="112" rx="8" ry="5" fill="#ff9fbf" opacity=".8"/>
+  <ellipse cx="132" cy="112" rx="8" ry="5" fill="#ff9fbf" opacity=".8"/>
+  <path d="M96 106 L104 106 L100 111Z" fill="#ff7aa8"/>
+  ${mouth}
+  <path d="M40 104 L60 106 M40 114 L60 112 M160 104 L140 106 M160 114 L140 112" stroke="#2b2340" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="160" y1="160" x2="182" y2="186" stroke="#6b4a2a" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="148" cy="146" r="22" fill="rgba(180,230,255,.55)" stroke="#2b2340" stroke-width="6"/>
+  <path d="M138 138 Q144 132 152 134" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+</svg>`;
+}
+document.getElementById('mascotBig').innerHTML = mascotSVG('happy').replace('<svg','<svg class="mascot"');
+
+/* background stars */
+(function(){const s=document.getElementById('stars');for(let i=0;i<28;i++){const e=document.createElement('span');e.textContent='✦';e.style.left=Math.random()*100+'%';e.style.top=Math.random()*100+'%';e.style.animationDelay=(Math.random()*2.5)+'s';e.style.fontSize=(6+Math.random()*8)+'px';s.appendChild(e)}})();
+
+/* ---------- Suspect dossier (from resource) ---------- */
+const SUSPECTS = {
+  'Anafora':      {em:'🥇', zh:'重复前面', tr:'Suka berdiri di HADAPAN', def:'Pengulangan kata pada awal baris.'},
+  'Responsi':     {em:'🎯', zh:'重复中间', tr:'Bersembunyi di TENGAH', def:'Pengulangan kata pada tengah-tengah baris.'},
+  'Epifora':      {em:'🔚', zh:'重复后面', tr:'Selalu di BELAKANG', def:'Pengulangan kata pada akhir baris.'},
+  'Repetisi':     {em:'🔁', zh:'重复同行', tr:'Ulang dalam baris yang SAMA', def:'Pengulangan kata pada baris yang sama.'},
+  'Sinkope':      {em:'✂️', zh:'缩写', tr:'Suka memendekkan kata', def:'Penggunaan singkatan kata.'},
+  'Simile':       {em:'🪞', zh:'比喻', tr:'Bawa kata seperti, bak, umpama, bagaikan, ibarat, laksana', def:'Perbandingan atau kiasan secara langsung yang bersendi laksana, seperti, bak, umpama, bagaikan, ibarat.'},
+  'Personifikasi':{em:'🧍', zh:'比拟 / 拟人', tr:'Beri sifat manusia kepada bukan manusia', def:'Penggunaan unsur kemanusiaan terhadap unsur bukan manusia.'},
+  'Hiperbola':    {em:'🎈', zh:'夸张', tr:'Cakap berlebih-lebihan', def:'Penggunaan unsur yang melampau.'},
+  'Metafora':     {em:'🎭', zh:'暗喻', tr:'Konkrit + abstrak, tiada kata perbandingan', def:'Perbandingan secara tidak langsung yang mempunyai dua kata: konkrit dan abstrak.'},
+  'Aliterasi':    {em:'🅱️', zh:'重复 Konsonan', tr:'Ulang bunyi KONSONAN', def:'Pengulangan bunyi konsonan.'},
+  'Asonansi':     {em:'🅰️', zh:'重复 Vokal', tr:'Ulang bunyi VOKAL', def:'Pengulangan bunyi vokal.'}
+};
+const caught = new Set();
+function renderDossier(){
+  const g=document.getElementById('dossierGrid'); g.innerHTML='';
+  Object.entries(SUSPECTS).forEach(([n,s])=>{
+    const d=document.createElement('div'); d.className='suspect'+(caught.has(n)?' caught':'');
+    d.innerHTML=`<div class="em">${s.em}</div><b>${n}</b><div class="zh">${s.zh}</div><div class="tr">${s.tr}</div>`;
+    g.appendChild(d);
+  });
+}
+
+/* ---------- Cases & questions ---------- */
+const CASES = [
+ {em:'📍', title:'Kes Kedudukan Kata', zh:'案件一：位置之谜',
+  story:'有人在诗句里一直重复同一个词！可是它躲在哪里？前面、中间、还是后面？看清楚“位置”就能抓到它。',
+  suspects:['Anafora','Responsi','Epifora'],
+  qs:[
+   {t:'mcq', type:'🔎 Kenal Pasti Suspek', q:'Suspek ini suka mengulang kata pada <u>awal baris</u>. Siapakah dia?',
+    opts:['Anafora','Epifora','Responsi','Repetisi'], a:'Anafora',
+    hint:'“Awal” bermaksud di hadapan. 中文：重复<b>前面</b>。',
+    note:'<b>Anafora</b> = pengulangan kata pada <b>awal</b> baris（重复前面）。'},
+   {t:'mcq', type:'📜 Periksa Bahan Bukti', q:'Gaya bahasa apakah yang terdapat dalam rangkap ini?',
+    ev:'Adik ketawa <b>riang</b>,<br>Kakak menyanyi <b>riang</b>,<br>Burung berkicau <b>riang</b>.',
+    opts:['Epifora','Anafora','Responsi','Asonansi'], a:'Epifora',
+    hint:'Lihat perkataan yang berulang — ia berada di <b>hujung</b> setiap baris. 重复的词在哪里？',
+    note:'Kata “riang” diulang pada <b>akhir</b> baris → <b>Epifora</b>（重复后面）。'},
+   {t:'mcq', type:'📜 Periksa Bahan Bukti', q:'Gaya bahasa apakah yang terdapat dalam rangkap ini?',
+    ev:'Anak kecil <b>bermain</b> di halaman,<br>Kucing putih <b>bermain</b> dengan bola,<br>Burung pipit <b>bermain</b> bersama kawan.',
+    opts:['Responsi','Anafora','Epifora','Repetisi'], a:'Responsi',
+    hint:'Kata “bermain” bukan di awal, bukan di akhir… ia di <b>tengah</b> baris.',
+    note:'Kata diulang pada <b>tengah-tengah</b> baris → <b>Responsi</b>（重复中间）。'}
+  ]},
+ {em:'🔊', title:'Kes Bunyi Misteri', zh:'案件二：声音之谜',
+  story:'诗集王国晚上传来奇怪的声音，有人一直重复同一个“音”！要分清楚：重复的是辅音（konsonan）还是元音（vokal）？',
+  suspects:['Aliterasi','Asonansi'],
+  qs:[
+   {t:'tf', type:'⚖️ Betul atau Salah', q:'“Aliterasi ialah pengulangan bunyi <u>vokal</u>.”',
+    opts:['Betul','Salah'], a:'Salah',
+    hint:'Aliterasi = 重复 <b>Konsonan</b>；Asonansi = 重复 <b>Vokal</b>。',
+    note:'<b>Aliterasi</b> = pengulangan bunyi <b>konsonan</b>. Pengulangan bunyi vokal ialah <b>Asonansi</b>.'},
+   {t:'mcq', type:'📜 Periksa Bahan Bukti', q:'Baris ini banyak mengulang bunyi huruf <b>b</b>. Apakah gaya bahasanya?',
+    ev:'<b>B</b>urung <b>b</b>e<b>b</b>as di <b>b</b>ukit <b>b</b>iru.',
+    opts:['Aliterasi','Asonansi','Anafora','Sinkope'], a:'Aliterasi',
+    hint:'Huruf <b>b</b> ialah konsonan atau vokal? (Vokal hanya a, e, i, o, u.)',
+    note:'Bunyi konsonan “b” diulang → <b>Aliterasi</b>（重复 Konsonan）。'},
+   {t:'mcq', type:'🔎 Kenal Pasti Suspek', q:'Bunyi <b>a, e, i, o, u</b> diulang-ulang dalam sebaris puisi. Siapakah suspeknya?',
+    opts:['Asonansi','Aliterasi','Repetisi','Responsi'], a:'Asonansi',
+    hint:'a, e, i, o, u ialah <b>vokal</b>. 重复 Vokal 是哪一个？',
+    note:'<b>Asonansi</b> = pengulangan bunyi <b>vokal</b>（重复 Vokal）。'}
+  ]},
+ {em:'🪞', title:'Kes Cermin Perbandingan', zh:'案件三：比喻之谜',
+  story:'两个嫌犯长得很像，都喜欢“比较”东西！Simile 一定带着比较词，Metafora 却偷偷不带。找出它们的不同！',
+  suspects:['Simile','Metafora'],
+  qs:[
+   {t:'mcq', type:'🧩 Cari Si Penyamar', q:'Antara berikut, yang manakah <u>BUKAN</u> kata sendi bagi Simile?',
+    opts:['kerana','bak','ibarat','bagaikan'], a:'kerana',
+    hint:'Kata sendi Simile: seperti, bak, umpama, bagaikan, ibarat, laksana.',
+    note:'<b>Simile</b> menggunakan kata <b>seperti, bak, umpama, bagaikan, ibarat, laksana</b>.'},
+   {t:'mcq', type:'📜 Periksa Bahan Bukti', q:'Gaya bahasa apakah yang terdapat dalam ayat ini?',
+    ev:'Wajahnya <b>bak</b> bulan purnama.',
+    opts:['Simile','Metafora','Hiperbola','Personifikasi'], a:'Simile',
+    hint:'Cari kata perbandingan dalam ayat… adakah “bak” dalam senarai Simile?',
+    note:'Ada kata “<b>bak</b>” → perbandingan secara langsung → <b>Simile</b>（比喻）。'},
+   {t:'mcq', type:'📜 Periksa Bahan Bukti', q:'Gaya bahasa apakah yang terdapat dalam ayat ini?',
+    ev:'Ibu sentiasa menabur <b>benih kasih</b> kepada anak-anaknya.',
+    opts:['Metafora','Simile','Personifikasi','Hiperbola'], a:'Metafora',
+    hint:'Tiada kata seperti/bak. “benih” = konkrit, “kasih” = abstrak.',
+    note:'Dua kata <b>konkrit + abstrak</b> (benih + kasih), tanpa kata perbandingan → <b>Metafora</b>（暗喻）。'}
+  ]},
+ {em:'🎭', title:'Kes Si Pelik', zh:'案件四：怪事之谜',
+  story:'诗集王国发生怪事：树叶会挥手、眼泪变成河！一个嫌犯让东西像人一样，另一个嫌犯讲话太夸张。',
+  suspects:['Personifikasi','Hiperbola'],
+  qs:[
+   {t:'mcq', type:'📜 Periksa Bahan Bukti', q:'Gaya bahasa apakah yang terdapat dalam ayat ini?',
+    ev:'Daun-daun <b>melambai-lambai</b> ditiup angin.',
+    opts:['Personifikasi','Hiperbola','Metafora','Simile'], a:'Personifikasi',
+    hint:'Siapa yang selalunya “melambai”? Manusia atau daun? 拟人 = 把人的动作给东西。',
+    note:'Daun diberi perbuatan manusia (melambai) → <b>Personifikasi</b>（比拟 / 拟人）。'},
+   {t:'mcq', type:'📜 Periksa Bahan Bukti', q:'Gaya bahasa apakah yang terdapat dalam ayat ini?',
+    ev:'Air matanya mengalir <b>menjadi sungai</b>.',
+    opts:['Hiperbola','Personifikasi','Simile','Sinkope'], a:'Hiperbola',
+    hint:'Bolehkah air mata betul-betul menjadi sungai? Ini sangat <b>melampau</b>！',
+    note:'Penggunaan unsur yang <b>melampau</b> → <b>Hiperbola</b>（夸张）。'},
+   {t:'tf', type:'⚖️ Betul atau Salah', q:'“Personifikasi ialah penggunaan unsur kemanusiaan terhadap unsur <u>manusia</u>.”',
+    opts:['Betul','Salah'], a:'Salah',
+    hint:'Personifikasi memberi sifat manusia kepada benda yang <b>bukan</b> manusia.',
+    note:'<b>Personifikasi</b> = penggunaan unsur kemanusiaan terhadap unsur <b>bukan manusia</b>.'}
+  ]},
+ {em:'🏁', title:'Kes Terakhir', zh:'案件五：最终大案',
+  story:'最后的大案！剩下的嫌犯很狡猾：一个把字缩短，一个在同一行里不停重复。再复习一次中文意思，就能结案！',
+  suspects:['Sinkope','Repetisi','Metafora'],
+  qs:[
+   {t:'mcq', type:'📜 Periksa Bahan Bukti', q:'Perkataan “<b>tak</b>” dan “<b>ku</b>” dalam ayat ini menunjukkan gaya bahasa…',
+    ev:'<b>Tak</b> usah risau, <b>ku</b> ada di sini.',
+    opts:['Sinkope','Repetisi','Aliterasi','Hiperbola'], a:'Sinkope',
+    hint:'“tak” berasal daripada “tidak”, “ku” daripada “aku”. Kata dipendekkan！',
+    note:'Penggunaan <b>singkatan kata</b> (tidak → tak, aku → ku) → <b>Sinkope</b>（缩写）。'},
+   {t:'mcq', type:'📜 Periksa Bahan Bukti', q:'Gaya bahasa apakah yang terdapat dalam baris ini?',
+    ev:'<b>Rindu, rindu, rindu</b> pada kampung halaman.',
+    opts:['Repetisi','Anafora','Epifora','Responsi'], a:'Repetisi',
+    hint:'Hanya ada <b>satu baris</b>, dan kata diulang dalam baris yang sama. 重复同行！',
+    note:'Kata diulang dalam <b>baris yang sama</b> → <b>Repetisi</b>（重复同行）。'},
+   {t:'mcq', type:'🈶 Padanan Bahasa Cina', q:'Apakah maksud <b>Metafora</b> dalam bahasa Cina?',
+    opts:['暗喻','比喻','夸张','拟人'], a:'暗喻',
+    hint:'Simile = 比喻（明明白白有比较词）。Metafora 是“暗暗地”比较。',
+    note:'<b>Metafora = 暗喻</b>, manakala <b>Simile = 比喻</b>。'}
+  ]}
+];
+
+/* ---------- Game state ---------- */
+const TIME=20;
+let ci=0, qi=0, score=0, correct=0, lens=1, hintUsed=false, answered=false;
+let tLeft=TIME, tHandle=null, caseScore=0, wrongs=[], fromScreen='s-start';
+
+function $(id){return document.getElementById(id)}
+function show(id){
+  if(id==='s-dossier'){ fromScreen=document.querySelector('.screen.active').id; renderDossier(); }
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  $(id).classList.add('active'); window.scrollTo(0,0);
+}
+function backFromDossier(){ show(fromScreen==='s-dossier'?'s-start':fromScreen); }
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+/* sound */
+let actx=null;
+function beep(ok){
+  try{ actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+    const notes= ok?[660,880,1100]:[300,200];
+    notes.forEach((f,i)=>{const o=actx.createOscillator(),g=actx.createGain();o.type=ok?'triangle':'square';o.frequency.value=f;
+      g.gain.setValueAtTime(.12,actx.currentTime+i*.09);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+i*.09+.18);
+      o.connect(g);g.connect(actx.destination);o.start(actx.currentTime+i*.09);o.stop(actx.currentTime+i*.09+.2);});
+  }catch(e){}
+}
+
+function startGame(){
+  ci=0;qi=0;score=0;correct=0;wrongs=[];caught.clear();
+  showCase();
+}
+function showCase(){
+  const c=CASES[ci]; lens=1; caseScore=0;
+  $('caseNo').textContent=`KES ${ci+1} / ${CASES.length}`;
+  $('caseTitle').textContent=c.em+' '+c.title;
+  $('caseZh').textContent=c.zh;
+  $('caseStory').textContent=c.story;
+  $('mascotSm').innerHTML=mascotSVG('happy').replace('<svg','<svg class="mascot sm"');
+  $('caseSuspects').innerHTML='<span class="zh" style="border:none;background:none;color:#7b3f8f">嫌犯：</span>'+
+    c.suspects.map(n=>`<span>${SUSPECTS[n].em} ${n}</span>`).join('');
+  show('s-case');
+}
+function beginCase(){ qi=0; show('s-q'); renderQ(); }
+
+function globalIndex(){ let n=0; for(let i=0;i<ci;i++) n+=CASES[i].qs.length; return n+qi; }
+
+function renderQ(){
+  const c=CASES[ci], q=c.qs[qi];
+  answered=false; hintUsed=false;
+  $('score').textContent=score; $('lens').textContent=lens;
+  $('qnum').textContent=globalIndex()+1;
+  $('prog').style.width=(globalIndex()/15*100)+'%';
+  $('caseEm').textContent=c.em;
+  $('caseBarTtl').innerHTML=`${c.title}<small class="zh">${c.zh}</small>`;
+  $('qtype').textContent=q.type;
+  $('qtext').innerHTML=q.q;
+  if(q.ev){$('qev').style.display='block';$('qev').innerHTML=q.ev}else{$('qev').style.display='none'}
+  const box=$('opts'); box.innerHTML='';
+  const opts = q.t==='tf' ? q.opts : shuffle(q.opts);
+  box.style.gridTemplateColumns = q.t==='tf' ? '1fr 1fr' : '1fr';
+  opts.forEach((o,i)=>{
+    const b=document.createElement('button'); b.className='opt'; b.dataset.v=o;
+    const key = q.t==='tf' ? (o==='Betul'?'✔':'✘') : 'ABCD'[i];
+    const label = q.t==='tf' ? `${o} <span class="zh" style="font-size:14px;color:#7a7090">${o==='Betul'?'对':'错'}</span>` : o;
+    b.innerHTML=`<span class="k">${key}</span><span class="${/[一-鿿]/.test(o)?'zh':''}">${label}</span>`;
+    b.onclick=()=>answer(o,b);
+    box.appendChild(b);
+  });
+  $('hintbox').className='hintbox'; $('hintbox').innerHTML='💡 '+q.hint;
+  $('btnHint').disabled=false;
+  $('btnLens').disabled = lens<1 || q.t==='tf';
+  startTimer();
+}
+
+function startTimer(){
+  clearInterval(tHandle); tLeft=TIME;
+  const bar=$('timerBar'); bar.classList.remove('warn');
+  bar.style.transition='none'; bar.style.width='100%';
+  const t0=Date.now();
+  tHandle=setInterval(()=>{
+    const el=(Date.now()-t0)/1000; tLeft=Math.max(0,TIME-el);
+    bar.style.width=(tLeft/TIME*100)+'%';
+    if(tLeft<6) bar.classList.add('warn');
+    if(tLeft<=0){clearInterval(tHandle); if(!answered) timeout();}
+  },100);
+}
+
+function useHint(){ if(answered) return; hintUsed=true; $('hintbox').classList.add('show'); $('btnHint').disabled=true; }
+function useLens(){
+  const q=CASES[ci].qs[qi]; if(answered||lens<1||q.t==='tf') return;
+  lens--; $('lens').textContent=lens; $('btnLens').disabled=true;
+  const wrongBtns=[...document.querySelectorAll('.opt')].filter(b=>b.dataset.v!==q.a);
+  shuffle(wrongBtns).slice(0,2).forEach(b=>b.classList.add('gone'));
+}
+
+function lockOpts(){ document.querySelectorAll('.opt').forEach(b=>b.disabled=true); $('btnHint').disabled=true; $('btnLens').disabled=true; }
+
+function answer(v,btn){
+  if(answered) return; answered=true; clearInterval(tHandle);
+  const q=CASES[ci].qs[qi]; lockOpts();
+  const ok = v===q.a;
+  document.querySelectorAll('.opt').forEach(b=>{ if(b.dataset.v===q.a) b.classList.add('right'); });
+  let pts=0;
+  if(ok){
+    pts = 100 + Math.round(tLeft)*5;
+    if(hintUsed) pts=Math.round(pts/2);
+    score+=pts; caseScore+=pts; correct++;
+    q.suspect && caught.add(q.suspect);
+  } else {
+    btn.classList.add('wrong');
+    wrongs.push(q);
+  }
+  beep(ok);
+  feedback(ok,pts,q);
+}
+function timeout(){
+  answered=true; const q=CASES[ci].qs[qi]; lockOpts();
+  document.querySelectorAll('.opt').forEach(b=>{ if(b.dataset.v===q.a) b.classList.add('right'); });
+  wrongs.push(q); beep(false);
+  feedback(false,0,q,true);
+}
+const PRAISE=['Hebat, Detektif! 太棒了！','Tepat sekali! 抓到了！','Mata helang! 好眼力！','Bijak! 推理正确！','Syabas! 真厉害！'];
+function feedback(ok,pts,q,to){
+  $('fbVerdict').className='verdict '+(ok?'ok':'no');
+  $('fbVerdict').innerHTML = ok ? '✅ <span class="zh">'+PRAISE[Math.floor(Math.random()*PRAISE.length)]+'</span>'
+                                : (to?'⏰ <span class="zh">Masa tamat! 时间到！</span>':'❌ <span class="zh">Alamak! 抓错人了！</span>');
+  $('fbPts').innerHTML = ok ? `+${pts} mata${hintUsed?' <span class="zh">（用了提示，分数减半）</span>':''}` : `Jawapan betul: <b>${q.a}</b>`;
+  $('fbNote').innerHTML=q.note;
+  $('fb').classList.add('show');
+  $('score').textContent=score;
+}
+function nextQ(){
+  $('fb').classList.remove('show');
+  qi++;
+  if(qi<CASES[ci].qs.length){ renderQ(); }
+  else { caseSolved(); }
+}
+function caseSolved(){
+  const c=CASES[ci];
+  c.suspects.forEach(n=>caught.add(n));
+  $('solvedNo').textContent=`KES ${ci+1} / ${CASES.length} · ${c.title}`;
+  $('solvedSuspects').innerHTML=c.suspects.map(n=>`<span>${SUSPECTS[n].em} ${n} <span class="zh" style="color:#7b3f8f">${SUSPECTS[n].zh}</span></span>`).join('');
+  $('solvedPts').innerHTML=`Mata kes ini: <b>${caseScore}</b> · Jumlah: <b>${score}</b>`;
+  $('btnNextCase').innerHTML = ci<CASES.length-1 ? '➡️ Kes Seterusnya <span class="zh">下一个案件</span>' : '🏅 Lihat Laporan Akhir <span class="zh">看结案报告</span>';
+  $('prog').style.width=(globalIndex()/15*100)+'%';
+  show('s-solved'); beep(true);
+}
+function nextCase(){
+  ci++;
+  if(ci<CASES.length) showCase(); else endGame();
+}
+function endGame(){
+  const stars = correct>=14?3: correct>=10?2: correct>=6?1:0;
+  $('endStars').textContent='⭐'.repeat(stars)+'☆'.repeat(3-stars);
+  $('endScore').textContent=score;
+  $('endCorrect').innerHTML=`Betul <b>${correct}</b> / 15 soalan <span class="zh">（答对 ${correct} 题）</span>`;
+  const ranks=[
+    ['Detektif Pelatih','实习侦探 —— 再看一次档案，你一定可以！'],
+    ['Detektif Muda','小侦探 —— 不错！再多练习容易混淆的几组。'],
+    ['Inspektor Bijak','聪明督察 —— 很厉害，只差一点点！'],
+    ['Detektif Agung 👑','超级神探 —— 全部嫌犯都逃不过你的眼睛！']];
+  $('endRank').textContent=ranks[stars][0];
+  $('endRankZh').textContent=ranks[stars][1];
+  $('mascotEnd').innerHTML=mascotSVG(stars>=1?'happy':'sad').replace('<svg','<svg class="mascot sm" style="width:90px"');
+  const r=$('review');
+  if(wrongs.length){
+    r.innerHTML='<div class="zh" style="font-weight:800;margin-bottom:6px">📒 复习一下这些题：</div>'+
+      wrongs.map(q=>`<div class="item">${q.ev?'<i>'+q.ev.replace(/<br>/g,' / ')+'</i><br>':''}<b>✔ ${q.a}</b> — ${q.note}</div>`).join('');
+  } else r.innerHTML='<div class="zh" style="text-align:center;font-weight:800">🎉 全对！完美破案！</div>';
+  $('prog').style.width='100%';
+  show('s-end');
+  confetti();
+}
+function confetti(){
+  const em=['🎉','⭐','🔍','🐾','✨','🎈'];
+  for(let i=0;i<30;i++){
+    const d=document.createElement('div'); d.className='confetti';
+    d.textContent=em[i%em.length]; d.style.left=Math.random()*100+'vw';
+    d.style.animationDuration=(2+Math.random()*2.5)+'s'; d.style.animationDelay=(Math.random()*1)+'s';
+    document.body.appendChild(d); setTimeout(()=>d.remove(),5000);
+  }
+}
+</script>
+</body>
+</html>
