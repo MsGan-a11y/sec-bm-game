@@ -89,6 +89,11 @@ h1{margin:4px 0 2px;font-size:30px;line-height:1.1;text-align:center;color:#fff;
 .tool{flex:1;border:2.5px solid #2b2340;border-radius:12px;padding:8px 6px;font:inherit;font-size:14px;font-weight:800;background:#efe6ff;cursor:pointer;color:#2b2340;line-height:1.2}
 .tool small{display:block;font-weight:500;font-size:11px;color:var(--muted)}
 .tool:disabled{opacity:.4;cursor:default}
+.ansin{width:100%;font:inherit;font-size:22px;font-weight:800;padding:12px 14px;border:3px solid #2b2340;border-radius:14px;background:#fff;color:var(--ink);outline:none;box-shadow:0 4px 0 #2b2340}
+.ansin:focus{border-color:#7b3f8f}
+.ansin.right{background:#d6ffe9;border-color:#1f9a6b}
+.ansin.wrong{background:#ffe0e0;border-color:#c43a3a;animation:shake .35s}
+.ansin.shake{animation:shake .35s}
 .hintbox{display:none;margin-top:12px;background:#fff3c4;border:2px solid #e3b623;border-radius:12px;padding:10px 12px;font-size:15px;line-height:1.45}
 .hintbox.show{display:block;animation:pop .3s}
 
@@ -142,9 +147,10 @@ h1{margin:4px 0 2px;font-size:30px;line-height:1.1;text-align:center;color:#fff;
         11 个“修辞嫌犯”偷偷混进了诗集王国的诗句里。请你当小侦探，看线索、找证据，把它们一个个抓回档案柜！
         <ul style="padding-left:20px;margin:8px 0 0">
           <li>共 <b>5 个案件</b>，每个案件 3 题，共 15 题</li>
-          <li>每题 <span class="tag">20 秒</span>，越快答对分数越高</li>
+          <li>看“证据”诗句，<b>自己打出</b> Gaya Bahasa 的名称</li>
+          <li>每题 <span class="tag">30 秒</span>，越快答对分数越高</li>
           <li>💡 <b>Petunjuk</b>：看提示，该题分数减半</li>
-          <li>🔍 <b>Kanta Ajaib</b>：删掉 2 个错误选项，每个案件只能用 1 次</li>
+          <li>🔍 <b>Kanta Ajaib</b>：变成 4 个选项（分数减半），每个案件只能用 1 次</li>
         </ul>
       </div>
       <button class="btn" onclick="startGame()">🕵️ Mula Siasat! <span class="zh">开始破案</span></button>
@@ -194,7 +200,7 @@ h1{margin:4px 0 2px;font-size:30px;line-height:1.1;text-align:center;color:#fff;
       <div class="opts" id="opts"></div>
       <div class="tools">
         <button class="tool" id="btnHint" onclick="useHint()">💡 Petunjuk<small class="zh">看提示（分数减半）</small></button>
-        <button class="tool" id="btnLens" onclick="useLens()">🔍 Kanta Ajaib<small class="zh">删 2 个错误选项</small></button>
+        <button class="tool" id="btnLens" onclick="useLens()">🔍 Kanta Ajaib<small class="zh">变成 4 个选项</small></button>
       </div>
       <div class="hintbox" id="hintbox"></div>
     </div>
@@ -300,107 +306,83 @@ function renderDossier(){
   });
 }
 
-/* ---------- Cases & questions ---------- */
+/* ---------- Cases & questions (students TYPE the gaya bahasa) ---------- */
 const CASES = [
- {em:'📍', title:'Kes Kedudukan Kata', zh:'案件一：位置之谜',
-  story:'有人在诗句里一直重复同一个词！可是它躲在哪里？前面、中间、还是后面？看清楚“位置”就能抓到它。',
-  suspects:['Anafora','Responsi','Epifora'],
+ {em:'🔁', title:'Kes Kata Berulang', zh:'案件一：重复的词',
+  story:'有个词在诗句里一直重复出现！它重复在同一行？每行开头？还是每行结尾？看清楚，再把嫌犯的名字打出来！',
+  suspects:['Repetisi','Anafora','Epifora'],
   qs:[
-   {t:'mcq', type:'🔎 Kenal Pasti Suspek', q:'Suspek ini suka mengulang kata pada <u>awal baris</u>. Siapakah dia?',
-    opts:['Anafora','Epifora','Responsi','Repetisi'], a:'Anafora',
-    hint:'“Awal” bermaksud di hadapan. 中文：重复<b>前面</b>。',
-    note:'<b>Anafora</b> = pengulangan kata pada <b>awal</b> baris（重复前面）。'},
-   {t:'mcq', type:'📜 Periksa Bahan Bukti', q:'Gaya bahasa apakah yang terdapat dalam rangkap ini?',
-    ev:'Adik ketawa <b>riang</b>,<br>Kakak menyanyi <b>riang</b>,<br>Burung berkicau <b>riang</b>.',
-    opts:['Epifora','Anafora','Responsi','Asonansi'], a:'Epifora',
-    hint:'Lihat perkataan yang berulang — ia berada di <b>hujung</b> setiap baris. 重复的词在哪里？',
-    note:'Kata “riang” diulang pada <b>akhir</b> baris → <b>Epifora</b>（重复后面）。'},
-   {t:'mcq', type:'📜 Periksa Bahan Bukti', q:'Gaya bahasa apakah yang terdapat dalam rangkap ini?',
-    ev:'Anak kecil <b>bermain</b> di halaman,<br>Kucing putih <b>bermain</b> dengan bola,<br>Burung pipit <b>bermain</b> bersama kawan.',
-    opts:['Responsi','Anafora','Epifora','Repetisi'], a:'Responsi',
-    hint:'Kata “bermain” bukan di awal, bukan di akhir… ia di <b>tengah</b> baris.',
-    note:'Kata diulang pada <b>tengah-tengah</b> baris → <b>Responsi</b>（重复中间）。'}
+   {ev:'<b>Ada</b> gula <b>ada</b> semut.', a:'Repetisi', d:['Anafora','Epifora','Responsi'],
+    hint:'Kata “ada” diulang dalam <b>baris yang sama</b>. 中文：重复同行。',
+    note:'Kata “ada” diulang dalam <b>baris yang sama</b> → <b>Repetisi</b>（重复同行）。'},
+   {ev:'<b>Ibu</b> menjahit baju,<br><b>Ibu</b> memasak nasi,<br><b>Ibu</b> menyapu lantai.', a:'Anafora', d:['Epifora','Repetisi','Responsi'],
+    hint:'Kata “Ibu” berada di <b>awal</b> setiap baris. 中文：重复前面。',
+    note:'Kata diulang pada <b>awal</b> baris → <b>Anafora</b>（重复前面）。'},
+   {ev:'Adik ketawa <b>riang</b>,<br>Kakak menyanyi <b>riang</b>,<br>Burung berkicau <b>riang</b>.', a:'Epifora', d:['Anafora','Responsi','Asonansi'],
+    hint:'Kata “riang” berada di <b>hujung</b> setiap baris. 中文：重复后面。',
+    note:'Kata diulang pada <b>akhir</b> baris → <b>Epifora</b>（重复后面）。'}
   ]},
- {em:'🔊', title:'Kes Bunyi Misteri', zh:'案件二：声音之谜',
-  story:'诗集王国晚上传来奇怪的声音，有人一直重复同一个“音”！要分清楚：重复的是辅音（konsonan）还是元音（vokal）？',
-  suspects:['Aliterasi','Asonansi'],
+ {em:'🔊', title:'Kes Tengah & Bunyi', zh:'案件二：中间与声音之谜',
+  story:'有一个嫌犯躲在诗句中间，另外两个一直重复同一个“音”。分清楚：是辅音（konsonan）还是元音（vokal）？',
+  suspects:['Responsi','Aliterasi','Asonansi'],
   qs:[
-   {t:'tf', type:'⚖️ Betul atau Salah', q:'“Aliterasi ialah pengulangan bunyi <u>vokal</u>.”',
-    opts:['Betul','Salah'], a:'Salah',
-    hint:'Aliterasi = 重复 <b>Konsonan</b>；Asonansi = 重复 <b>Vokal</b>。',
-    note:'<b>Aliterasi</b> = pengulangan bunyi <b>konsonan</b>. Pengulangan bunyi vokal ialah <b>Asonansi</b>.'},
-   {t:'mcq', type:'📜 Periksa Bahan Bukti', q:'Baris ini banyak mengulang bunyi huruf <b>b</b>. Apakah gaya bahasanya?',
-    ev:'<b>B</b>urung <b>b</b>e<b>b</b>as di <b>b</b>ukit <b>b</b>iru.',
-    opts:['Aliterasi','Asonansi','Anafora','Sinkope'], a:'Aliterasi',
-    hint:'Huruf <b>b</b> ialah konsonan atau vokal? (Vokal hanya a, e, i, o, u.)',
+   {ev:'Anak kecil <b>bermain</b> di halaman,<br>Kucing putih <b>bermain</b> dengan bola,<br>Burung pipit <b>bermain</b> bersama kawan.', a:'Responsi', d:['Anafora','Epifora','Repetisi'],
+    hint:'Kata “bermain” bukan di awal, bukan di akhir — ia di <b>tengah</b> baris. 中文：重复中间。',
+    note:'Kata diulang pada <b>tengah-tengah</b> baris → <b>Responsi</b>（重复中间）。'},
+   {ev:'<b>B</b>urung <b>b</b>e<b>b</b>as di <b>b</b>ukit <b>b</b>iru.', a:'Aliterasi', d:['Asonansi','Anafora','Repetisi'],
+    hint:'Huruf <b>b</b> diulang-ulang. “b” ialah konsonan. 中文：重复 Konsonan。',
     note:'Bunyi konsonan “b” diulang → <b>Aliterasi</b>（重复 Konsonan）。'},
-   {t:'mcq', type:'🔎 Kenal Pasti Suspek', q:'Bunyi <b>a, e, i, o, u</b> diulang-ulang dalam sebaris puisi. Siapakah suspeknya?',
-    opts:['Asonansi','Aliterasi','Repetisi','Responsi'], a:'Asonansi',
-    hint:'a, e, i, o, u ialah <b>vokal</b>. 重复 Vokal 是哪一个？',
-    note:'<b>Asonansi</b> = pengulangan bunyi <b>vokal</b>（重复 Vokal）。'}
+   {ev:'K<b>i</b>ta d<b>i</b> s<b>i</b>n<b>i</b>.', a:'Asonansi', d:['Aliterasi','Repetisi','Sinkope'],
+    hint:'Bunyi <b>i</b> diulang-ulang. a, e, i, o, u ialah vokal. 中文：重复 Vokal。',
+    note:'Bunyi vokal “i” diulang → <b>Asonansi</b>（重复 Vokal）。'}
   ]},
  {em:'🪞', title:'Kes Cermin Perbandingan', zh:'案件三：比喻之谜',
-  story:'两个嫌犯长得很像，都喜欢“比较”东西！Simile 一定带着比较词，Metafora 却偷偷不带。找出它们的不同！',
+  story:'两个嫌犯都喜欢“比较”东西！Simile 一定带着比较词（seperti, bak, umpama, bagaikan, ibarat, laksana），Metafora 却偷偷不带。',
   suspects:['Simile','Metafora'],
   qs:[
-   {t:'mcq', type:'🧩 Cari Si Penyamar', q:'Antara berikut, yang manakah <u>BUKAN</u> kata sendi bagi Simile?',
-    opts:['kerana','bak','ibarat','bagaikan'], a:'kerana',
-    hint:'Kata sendi Simile: seperti, bak, umpama, bagaikan, ibarat, laksana.',
-    note:'<b>Simile</b> menggunakan kata <b>seperti, bak, umpama, bagaikan, ibarat, laksana</b>.'},
-   {t:'mcq', type:'📜 Periksa Bahan Bukti', q:'Gaya bahasa apakah yang terdapat dalam ayat ini?',
-    ev:'Wajahnya <b>bak</b> bulan purnama.',
-    opts:['Simile','Metafora','Hiperbola','Personifikasi'], a:'Simile',
-    hint:'Cari kata perbandingan dalam ayat… adakah “bak” dalam senarai Simile?',
+   {ev:'Wajahnya <b>bak</b> bulan purnama.', a:'Simile', d:['Metafora','Hiperbola','Personifikasi'],
+    hint:'Ada kata perbandingan “bak”. 中文：比喻。',
     note:'Ada kata “<b>bak</b>” → perbandingan secara langsung → <b>Simile</b>（比喻）。'},
-   {t:'mcq', type:'📜 Periksa Bahan Bukti', q:'Gaya bahasa apakah yang terdapat dalam ayat ini?',
-    ev:'Ibu sentiasa menabur <b>benih kasih</b> kepada anak-anaknya.',
-    opts:['Metafora','Simile','Personifikasi','Hiperbola'], a:'Metafora',
-    hint:'Tiada kata seperti/bak. “benih” = konkrit, “kasih” = abstrak.',
+   {ev:'Hatinya keras <b>seperti</b> batu.', a:'Simile', d:['Metafora','Hiperbola','Personifikasi'],
+    hint:'Cari kata “seperti” — itu kata sendi perbandingan. 中文：比喻。',
+    note:'Ada kata “<b>seperti</b>” → <b>Simile</b>（比喻）。'},
+   {ev:'Ibu sentiasa menabur <b>benih kasih</b> kepada anak-anaknya.', a:'Metafora', d:['Simile','Personifikasi','Hiperbola'],
+    hint:'Tiada kata seperti/bak. “benih” konkrit + “kasih” abstrak. 中文：暗喻。',
     note:'Dua kata <b>konkrit + abstrak</b> (benih + kasih), tanpa kata perbandingan → <b>Metafora</b>（暗喻）。'}
   ]},
  {em:'🎭', title:'Kes Si Pelik', zh:'案件四：怪事之谜',
-  story:'诗集王国发生怪事：树叶会挥手、眼泪变成河！一个嫌犯让东西像人一样，另一个嫌犯讲话太夸张。',
+  story:'诗集王国发生怪事：树叶会挥手、风会说悄悄话、眼泪变成河！一个嫌犯让东西像人一样，另一个讲话太夸张。',
   suspects:['Personifikasi','Hiperbola'],
   qs:[
-   {t:'mcq', type:'📜 Periksa Bahan Bukti', q:'Gaya bahasa apakah yang terdapat dalam ayat ini?',
-    ev:'Daun-daun <b>melambai-lambai</b> ditiup angin.',
-    opts:['Personifikasi','Hiperbola','Metafora','Simile'], a:'Personifikasi',
-    hint:'Siapa yang selalunya “melambai”? Manusia atau daun? 拟人 = 把人的动作给东西。',
-    note:'Daun diberi perbuatan manusia (melambai) → <b>Personifikasi</b>（比拟 / 拟人）。'},
-   {t:'mcq', type:'📜 Periksa Bahan Bukti', q:'Gaya bahasa apakah yang terdapat dalam ayat ini?',
-    ev:'Air matanya mengalir <b>menjadi sungai</b>.',
-    opts:['Hiperbola','Personifikasi','Simile','Sinkope'], a:'Hiperbola',
-    hint:'Bolehkah air mata betul-betul menjadi sungai? Ini sangat <b>melampau</b>！',
+   {ev:'Daun-daun <b>melambai-lambai</b> ditiup angin.', a:'Personifikasi', d:['Hiperbola','Metafora','Simile'],
+    hint:'Daun buat perbuatan manusia (melambai). 中文：比拟 / 拟人。',
+    note:'Daun diberi perbuatan manusia → <b>Personifikasi</b>（比拟 / 拟人）。'},
+   {ev:'Air matanya mengalir <b>menjadi sungai</b>.', a:'Hiperbola', d:['Personifikasi','Simile','Metafora'],
+    hint:'Air mata jadi sungai? Sangat <b>melampau</b>! 中文：夸张。',
     note:'Penggunaan unsur yang <b>melampau</b> → <b>Hiperbola</b>（夸张）。'},
-   {t:'tf', type:'⚖️ Betul atau Salah', q:'“Personifikasi ialah penggunaan unsur kemanusiaan terhadap unsur <u>manusia</u>.”',
-    opts:['Betul','Salah'], a:'Salah',
-    hint:'Personifikasi memberi sifat manusia kepada benda yang <b>bukan</b> manusia.',
-    note:'<b>Personifikasi</b> = penggunaan unsur kemanusiaan terhadap unsur <b>bukan manusia</b>.'}
+   {ev:'Angin <b>berbisik</b> di telingaku.', a:'Personifikasi', d:['Hiperbola','Aliterasi','Metafora'],
+    hint:'Siapa yang selalunya berbisik? Manusia! 中文：比拟 / 拟人。',
+    note:'Angin diberi sifat manusia (berbisik) → <b>Personifikasi</b>。'}
   ]},
  {em:'🏁', title:'Kes Terakhir', zh:'案件五：最终大案',
-  story:'最后的大案！剩下的嫌犯很狡猾：一个把字缩短，一个在同一行里不停重复。再复习一次中文意思，就能结案！',
-  suspects:['Sinkope','Repetisi','Metafora'],
+  story:'最后的大案！嫌犯们混在一起了：有人把字缩短，有人偷偷比喻，有人说得太夸张。全部抓起来就结案！',
+  suspects:['Sinkope','Metafora','Hiperbola'],
   qs:[
-   {t:'mcq', type:'📜 Periksa Bahan Bukti', q:'Perkataan “<b>tak</b>” dan “<b>ku</b>” dalam ayat ini menunjukkan gaya bahasa…',
-    ev:'<b>Tak</b> usah risau, <b>ku</b> ada di sini.',
-    opts:['Sinkope','Repetisi','Aliterasi','Hiperbola'], a:'Sinkope',
-    hint:'“tak” berasal daripada “tidak”, “ku” daripada “aku”. Kata dipendekkan！',
+   {ev:'<b>Tak</b> usah risau, <b>ku</b> ada di sini.', a:'Sinkope', d:['Repetisi','Aliterasi','Hiperbola'],
+    hint:'“tak” = tidak, “ku” = aku. Kata dipendekkan! 中文：缩写。',
     note:'Penggunaan <b>singkatan kata</b> (tidak → tak, aku → ku) → <b>Sinkope</b>（缩写）。'},
-   {t:'mcq', type:'📜 Periksa Bahan Bukti', q:'Gaya bahasa apakah yang terdapat dalam baris ini?',
-    ev:'<b>Rindu, rindu, rindu</b> pada kampung halaman.',
-    opts:['Repetisi','Anafora','Epifora','Responsi'], a:'Repetisi',
-    hint:'Hanya ada <b>satu baris</b>, dan kata diulang dalam baris yang sama. 重复同行！',
-    note:'Kata diulang dalam <b>baris yang sama</b> → <b>Repetisi</b>（重复同行）。'},
-   {t:'mcq', type:'🈶 Padanan Bahasa Cina', q:'Apakah maksud <b>Metafora</b> dalam bahasa Cina?',
-    opts:['暗喻','比喻','夸张','拟人'], a:'暗喻',
-    hint:'Simile = 比喻（明明白白有比较词）。Metafora 是“暗暗地”比较。',
-    note:'<b>Metafora = 暗喻</b>, manakala <b>Simile = 比喻</b>。'}
+   {ev:'Mereka hidup di bawah <b>payung kasih</b> ibu.', a:'Metafora', d:['Simile','Personifikasi','Hiperbola'],
+    hint:'“payung” konkrit + “kasih” abstrak, tiada kata seperti/bak. 中文：暗喻。',
+    note:'<b>payung</b> (konkrit) + <b>kasih</b> (abstrak) → <b>Metafora</b>（暗喻）。'},
+   {ev:'Jeritannya <b>membelah langit</b>.', a:'Hiperbola', d:['Personifikasi','Metafora','Simile'],
+    hint:'Bolehkah jeritan betul-betul membelah langit? 中文：夸张。',
+    note:'Gambaran yang <b>melampau</b> → <b>Hiperbola</b>（夸张）。'}
   ]}
 ];
 
 /* ---------- Game state ---------- */
-const TIME=20;
-let ci=0, qi=0, score=0, correct=0, lens=1, hintUsed=false, answered=false;
+const TIME=30;
+let ci=0, qi=0, score=0, correct=0, lens=1, hintUsed=false, lensUsed=false, answered=false;
 let tLeft=TIME, tHandle=null, caseScore=0, wrongs=[], fromScreen='s-start';
 
 function $(id){return document.getElementById(id)}
@@ -411,6 +393,22 @@ function show(id){
 }
 function backFromDossier(){ show(fromScreen==='s-dossier'?'s-start':fromScreen); }
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function norm(s){return (s||'').toLowerCase().replace(/[^a-z]/g,'')}
+function lev(a,b){const m=a.length,n=b.length,d=Array.from({length:m+1},(_,i)=>[i]);for(let j=1;j<=n;j++)d[0][j]=j;
+  for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][n]}
+/* returns 'exact' | 'typo' | false */
+function check(input,ans){
+  const x=norm(input), y=norm(ans);
+  if(!x) return false;
+  if(x===y) return 'exact';
+  // close spelling is accepted only if it is not closer to another gaya bahasa
+  const dist=lev(x,y);
+  if(dist<=2 && y.length>=6){
+    const better=Object.keys(SUSPECTS).some(n=>n!==ans && lev(x,norm(n))<dist);
+    if(!better) return 'typo';
+  }
+  return false;
+}
 
 /* sound */
 let actx=null;
@@ -435,7 +433,7 @@ function showCase(){
   $('caseStory').textContent=c.story;
   $('mascotSm').innerHTML=mascotSVG('happy').replace('<svg','<svg class="mascot sm"');
   $('caseSuspects').innerHTML='<span class="zh" style="border:none;background:none;color:#7b3f8f">嫌犯：</span>'+
-    c.suspects.map(n=>`<span>${SUSPECTS[n].em} ${n}</span>`).join('');
+    [...new Set(c.qs.map(q=>q.a))].map(n=>`<span>${SUSPECTS[n].em} ${n}</span>`).join('');
   show('s-case');
 }
 function beginCase(){ qi=0; show('s-q'); renderQ(); }
@@ -444,29 +442,24 @@ function globalIndex(){ let n=0; for(let i=0;i<ci;i++) n+=CASES[i].qs.length; re
 
 function renderQ(){
   const c=CASES[ci], q=c.qs[qi];
-  answered=false; hintUsed=false;
+  answered=false; hintUsed=false; lensUsed=false;
   $('score').textContent=score; $('lens').textContent=lens;
   $('qnum').textContent=globalIndex()+1;
   $('prog').style.width=(globalIndex()/15*100)+'%';
   $('caseEm').textContent=c.em;
   $('caseBarTtl').innerHTML=`${c.title}<small class="zh">${c.zh}</small>`;
-  $('qtype').textContent=q.type;
-  $('qtext').innerHTML=q.q;
-  if(q.ev){$('qev').style.display='block';$('qev').innerHTML=q.ev}else{$('qev').style.display='none'}
-  const box=$('opts'); box.innerHTML='';
-  const opts = q.t==='tf' ? q.opts : shuffle(q.opts);
-  box.style.gridTemplateColumns = q.t==='tf' ? '1fr 1fr' : '1fr';
-  opts.forEach((o,i)=>{
-    const b=document.createElement('button'); b.className='opt'; b.dataset.v=o;
-    const key = q.t==='tf' ? (o==='Betul'?'✔':'✘') : 'ABCD'[i];
-    const label = q.t==='tf' ? `${o} <span class="zh" style="font-size:14px;color:#7a7090">${o==='Betul'?'对':'错'}</span>` : o;
-    b.innerHTML=`<span class="k">${key}</span><span class="${/[一-鿿]/.test(o)?'zh':''}">${label}</span>`;
-    b.onclick=()=>answer(o,b);
-    box.appendChild(b);
-  });
+  $('qtype').textContent='✍️ Tulis Nama Suspek';
+  $('qtext').innerHTML='Apakah gaya bahasa dalam bahan bukti ini? <span class="zh" style="font-size:15px;color:#7a7090">（请打出 Gaya Bahasa 名称）</span>';
+  $('qev').style.display='block'; $('qev').innerHTML=q.ev;
+  const box=$('opts'); box.style.gridTemplateColumns='1fr';
+  box.innerHTML=`<form class="ansform" onsubmit="event.preventDefault();submitTyped()">
+      <input id="ans" class="ansin" type="text" autocomplete="off" autocapitalize="words" autocorrect="off" spellcheck="false" placeholder="Contoh: Simile">
+      <button class="btn mint" type="submit" style="margin-top:10px">🚨 Tangkap! <span class="zh">提交</span></button>
+    </form>`;
   $('hintbox').className='hintbox'; $('hintbox').innerHTML='💡 '+q.hint;
   $('btnHint').disabled=false;
-  $('btnLens').disabled = lens<1 || q.t==='tf';
+  $('btnLens').disabled = lens<1;
+  setTimeout(()=>{const i=$('ans'); if(i) i.focus({preventScroll:true});},350);
   startTimer();
 }
 
@@ -478,51 +471,66 @@ function startTimer(){
   tHandle=setInterval(()=>{
     const el=(Date.now()-t0)/1000; tLeft=Math.max(0,TIME-el);
     bar.style.width=(tLeft/TIME*100)+'%';
-    if(tLeft<6) bar.classList.add('warn');
+    if(tLeft<8) bar.classList.add('warn');
     if(tLeft<=0){clearInterval(tHandle); if(!answered) timeout();}
   },100);
 }
 
 function useHint(){ if(answered) return; hintUsed=true; $('hintbox').classList.add('show'); $('btnHint').disabled=true; }
+/* Kanta Ajaib: turns the typing box into 4 choices (for weaker students) */
 function useLens(){
-  const q=CASES[ci].qs[qi]; if(answered||lens<1||q.t==='tf') return;
-  lens--; $('lens').textContent=lens; $('btnLens').disabled=true;
-  const wrongBtns=[...document.querySelectorAll('.opt')].filter(b=>b.dataset.v!==q.a);
-  shuffle(wrongBtns).slice(0,2).forEach(b=>b.classList.add('gone'));
+  const q=CASES[ci].qs[qi]; if(answered||lens<1) return;
+  lens--; lensUsed=true; $('lens').textContent=lens; $('btnLens').disabled=true;
+  const box=$('opts'); box.innerHTML='';
+  shuffle([q.a,...q.d.slice(0,3)]).forEach((o,i)=>{
+    const b=document.createElement('button'); b.className='opt'; b.dataset.v=o;
+    b.innerHTML=`<span class="k">${'ABCD'[i]}</span><span>${o}</span>`;
+    b.onclick=()=>answer(o,b);
+    box.appendChild(b);
+  });
+}
+function submitTyped(){
+  const v=$('ans').value.trim();
+  if(!v){ $('ans').classList.add('shake'); setTimeout(()=>$('ans').classList.remove('shake'),400); return; }
+  answer(v,null);
 }
 
-function lockOpts(){ document.querySelectorAll('.opt').forEach(b=>b.disabled=true); $('btnHint').disabled=true; $('btnLens').disabled=true; }
+function lockOpts(){ document.querySelectorAll('.opt,.ansin,.ansform button').forEach(b=>b.disabled=true); $('btnHint').disabled=true; $('btnLens').disabled=true; }
 
 function answer(v,btn){
   if(answered) return; answered=true; clearInterval(tHandle);
   const q=CASES[ci].qs[qi]; lockOpts();
-  const ok = v===q.a;
-  document.querySelectorAll('.opt').forEach(b=>{ if(b.dataset.v===q.a) b.classList.add('right'); });
+  const res = btn ? (v===q.a?'exact':false) : check(v,q.a);
+  const ok=!!res;
+  if(btn){ document.querySelectorAll('.opt').forEach(b=>{ if(b.dataset.v===q.a) b.classList.add('right'); }); if(!ok) btn.classList.add('wrong'); }
+  else { const i=$('ans'); i.classList.add(ok?'right':'wrong'); }
   let pts=0;
   if(ok){
-    pts = 100 + Math.round(tLeft)*5;
+    pts = 100 + Math.round(tLeft)*4;
     if(hintUsed) pts=Math.round(pts/2);
+    if(lensUsed) pts=Math.round(pts/2);
     score+=pts; caseScore+=pts; correct++;
-    q.suspect && caught.add(q.suspect);
   } else {
-    btn.classList.add('wrong');
-    wrongs.push(q);
+    wrongs.push({...q, typed:v});
   }
   beep(ok);
-  feedback(ok,pts,q);
+  feedback(ok,pts,q,false,res,v);
 }
 function timeout(){
   answered=true; const q=CASES[ci].qs[qi]; lockOpts();
   document.querySelectorAll('.opt').forEach(b=>{ if(b.dataset.v===q.a) b.classList.add('right'); });
-  wrongs.push(q); beep(false);
+  wrongs.push({...q, typed:''}); beep(false);
   feedback(false,0,q,true);
 }
 const PRAISE=['Hebat, Detektif! 太棒了！','Tepat sekali! 抓到了！','Mata helang! 好眼力！','Bijak! 推理正确！','Syabas! 真厉害！'];
-function feedback(ok,pts,q,to){
+function feedback(ok,pts,q,to,res,typed){
   $('fbVerdict').className='verdict '+(ok?'ok':'no');
   $('fbVerdict').innerHTML = ok ? '✅ <span class="zh">'+PRAISE[Math.floor(Math.random()*PRAISE.length)]+'</span>'
                                 : (to?'⏰ <span class="zh">Masa tamat! 时间到！</span>':'❌ <span class="zh">Alamak! 抓错人了！</span>');
-  $('fbPts').innerHTML = ok ? `+${pts} mata${hintUsed?' <span class="zh">（用了提示，分数减半）</span>':''}` : `Jawapan betul: <b>${q.a}</b>`;
+  let extra='';
+  if(ok && res==='typo') extra=`<br>✏️ Ejaan betul: <b>${q.a}</b> <span class="zh">（注意拼写！）</span>`;
+  if(ok && (hintUsed||lensUsed)) extra+=' <span class="zh">（用了道具，分数减半）</span>';
+  $('fbPts').innerHTML = ok ? `+${pts} mata${extra}` : `${typed?`Jawapan kamu: <s>${typed.replace(/</g,'&lt;')}</s><br>`:''}Jawapan betul: <b>${q.a}</b>`;
   $('fbNote').innerHTML=q.note;
   $('fb').classList.add('show');
   $('score').textContent=score;
@@ -563,7 +571,7 @@ function endGame(){
   const r=$('review');
   if(wrongs.length){
     r.innerHTML='<div class="zh" style="font-weight:800;margin-bottom:6px">📒 复习一下这些题：</div>'+
-      wrongs.map(q=>`<div class="item">${q.ev?'<i>'+q.ev.replace(/<br>/g,' / ')+'</i><br>':''}<b>✔ ${q.a}</b> — ${q.note}</div>`).join('');
+      wrongs.map(q=>`<div class="item"><i>${q.ev.replace(/<br>/g,' / ')}</i><br><b>✔ ${q.a}</b> — ${q.note}</div>`).join('');
   } else r.innerHTML='<div class="zh" style="text-align:center;font-weight:800">🎉 全对！完美破案！</div>';
   $('prog').style.width='100%';
   show('s-end');
