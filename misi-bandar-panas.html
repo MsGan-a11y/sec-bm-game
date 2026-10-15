@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Misi Selamatkan Bandar Panas · Karangan Respons Terhad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sun:#ff8a3d; --sun2:#ffb347; --hot:#ff5a5f; --ice:#5ad1c8; --ice2:#a8eee6;
+  --ink:#3b2a20; --soft:#7a6457; --card:#fffaf3; --line:#f1dcc6;
+  --ok:#2bb673; --bad:#ef5350; --gold:#ffc83d;
+  --font:'Waknan','Baloo 2','ZCOOL KuaiLe',system-ui,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--font); color:var(--ink); min-height:100vh;
+  background:linear-gradient(180deg,#ffe2b8 0%,#ffd0a1 45%,#ffe9cf 100%);
+  font-size:17px; line-height:1.45;
+}
+body.hot1{background:linear-gradient(180deg,#ffc89a 0%,#ffb27a 50%,#ffdcb8 100%)}
+body.cool{background:linear-gradient(180deg,#d9f7f3 0%,#bdeee8 50%,#eafcf9 100%)}
+.wrap{max-width:540px;margin:0 auto;padding:12px 14px 40px}
+body.kelas .wrap{max-width:960px}
+body.kelas{font-size:22px}
+.zh{font-family:'ZCOOL KuaiLe','Waknan','Baloo 2',sans-serif;color:var(--soft);font-size:.86em}
+h1,h2,h3{margin:.2em 0;line-height:1.2}
+button{font-family:inherit;cursor:pointer;border:none}
+.hidden{display:none!important}
+
+/* HUD */
+.hud{position:sticky;top:0;z-index:5;background:rgba(255,250,243,.92);backdrop-filter:blur(6px);
+  border-radius:0 0 18px 18px;padding:8px 12px 10px;margin:-12px -14px 12px;box-shadow:0 4px 14px rgba(150,80,20,.12)}
+.hudrow{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.lvltag{font-weight:800;font-size:.85em;background:#fff;border:2px solid var(--line);border-radius:999px;padding:2px 10px;white-space:nowrap}
+.score{font-weight:800;white-space:nowrap}
+.teams{display:flex;gap:8px}
+.team{padding:2px 10px;border-radius:999px;font-weight:800;font-size:.85em;background:#fff;border:2px solid var(--line)}
+.team.on{border-color:var(--sun);background:#fff1e3;transform:scale(1.06)}
+.thermo{display:flex;align-items:center;gap:8px;margin-top:6px}
+.tbar{flex:1;height:16px;border-radius:999px;background:#eee3d6;overflow:hidden;position:relative}
+.tfill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--ice),var(--sun2),var(--hot));transition:width .6s}
+.tgoal{position:absolute;top:-2px;bottom:-2px;width:3px;background:#2a9d8f}
+.tval{font-weight:800;min-width:64px;text-align:right}
+.combo{font-size:.8em;color:#2a9d8f;font-weight:800}
+
+/* cards */
+.card{background:var(--card);border-radius:22px;padding:16px;box-shadow:0 6px 0 var(--line),0 10px 24px rgba(160,90,30,.12);margin-bottom:14px}
+.center{text-align:center}
+.mascot{width:130px;height:auto;display:block;margin:0 auto}
+body.kelas .mascot{width:170px}
+.bob{animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px) rotate(-2deg)}}
+.btn{display:inline-block;padding:12px 22px;border-radius:16px;font-weight:800;font-size:1em;
+  background:var(--sun);color:#fff;box-shadow:0 5px 0 #d9662a;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #d9662a}
+.btn.ice{background:var(--ice);box-shadow:0 5px 0 #2fa69d}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:0 5px 0 var(--line);border:2px solid var(--line)}
+.btn.block{display:block;width:100%;margin-top:10px}
+.btn:disabled{opacity:.45;pointer-events:none}
+.modes{display:grid;gap:10px;margin-top:12px}
+.mode{display:flex;gap:12px;align-items:center;text-align:left;background:#fff;border:3px solid var(--line);border-radius:18px;padding:12px;font-size:1em;color:var(--ink)}
+.mode.sel{border-color:var(--sun);background:#fff1e3}
+.mode .ic{font-size:2em}
+.pill{display:inline-block;background:#fff1e3;border-radius:999px;padding:2px 10px;font-size:.8em;font-weight:800;color:#c1531b}
+
+/* level intro */
+.formula{display:grid;gap:8px;margin:10px 0}
+.fstep{display:flex;gap:10px;align-items:center;background:#fff;border-radius:14px;padding:8px 10px;border:2px dashed var(--line)}
+.fnum{flex:none;width:32px;height:32px;border-radius:50%;background:var(--sun);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center}
+.fstep b{display:block}
+
+/* question */
+.qtype{font-size:.75em;font-weight:800;color:#c1531b;letter-spacing:.5px}
+.qtext{font-size:1.15em;font-weight:800;margin:4px 0}
+.passage{background:#fff;border-left:6px solid var(--sun2);border-radius:12px;padding:10px 12px;margin:8px 0;font-size:.95em}
+.timer{height:8px;border-radius:999px;background:#eee3d6;overflow:hidden;margin:8px 0 4px}
+.timer i{display:block;height:100%;background:linear-gradient(90deg,var(--hot),var(--sun2));width:100%;transition:width 1s linear}
+.opts{display:grid;gap:10px;margin-top:10px}
+body.kelas .opts.two{grid-template-columns:1fr 1fr}
+.opt{background:#fff;border:3px solid var(--line);border-radius:16px;padding:12px 14px;text-align:left;font-size:1em;color:var(--ink);font-weight:700;display:flex;gap:10px;align-items:center}
+.opt .k{flex:none;width:30px;height:30px;border-radius:10px;background:#fff1e3;color:#c1531b;display:flex;align-items:center;justify-content:center;font-weight:800}
+.opt.ok{border-color:var(--ok);background:#e6f8ee}
+.opt.bad{border-color:var(--bad);background:#fdeaea;animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.opt:disabled{cursor:default}
+
+/* order */
+.slots{display:grid;gap:8px;margin:10px 0;min-height:60px;background:#fff;border:3px dashed var(--line);border-radius:16px;padding:8px}
+.slot{display:flex;gap:8px;align-items:flex-start;background:#fff1e3;border-radius:12px;padding:8px 10px;font-weight:700;text-align:left;color:var(--ink);font-size:.95em}
+.slot .n{flex:none;width:26px;height:26px;border-radius:50%;background:var(--sun);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.85em}
+.slot.ok{background:#e6f8ee}.slot.bad{background:#fdeaea}
+.pool{display:grid;gap:8px}
+.chip{background:#fff;border:2px solid var(--line);border-radius:12px;padding:8px 10px;text-align:left;font-size:.95em;color:var(--ink);font-weight:600}
+.chip.used{opacity:.3;pointer-events:none}
+.empty{color:#b9a596;text-align:center;font-size:.9em;padding:10px}
+
+/* tag */
+.titem{background:#fff;border:2px solid var(--line);border-radius:14px;padding:10px;margin-top:10px}
+.titem .s{font-weight:700;margin-bottom:6px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{padding:5px 10px;border-radius:999px;background:#f7efe6;color:var(--ink);font-size:.82em;font-weight:800;border:2px solid transparent}
+.tag.sel{background:var(--sun);color:#fff}
+.titem.ok{border-color:var(--ok);background:#f0fbf5}.titem.bad{border-color:var(--bad);background:#fff3f3}
+.fix{font-size:.85em;font-weight:800;color:var(--bad);margin-top:4px}
+
+/* feedback */
+.fb{border-radius:18px;padding:12px 14px;margin-top:12px;animation:pop .3s}
+.fb.ok{background:#e6f8ee;border:3px solid var(--ok)}
+.fb.bad{background:#fdeaea;border:3px solid var(--bad)}
+.fb h3{margin:0 0 4px}
+.note{background:#fff;border-radius:12px;padding:8px 10px;margin-top:8px;font-weight:700}
+.note::before{content:"📌 ";}
+@keyframes pop{0%{transform:scale(.9);opacity:0}100%{transform:scale(1);opacity:1}}
+.hintbox{background:#fffbe6;border:2px dashed var(--gold);border-radius:12px;padding:8px 10px;margin-top:8px}
+.qfoot{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap}
+
+/* end */
+.model p{background:#fff;border-radius:14px;padding:10px 12px;margin:8px 0;line-height:1.8}
+.model .r{border-radius:6px;padding:0 2px}
+.r0{background:#ffe0c2}.r1{background:#d8f3ef}.r2{background:#fff0a8}.r3{background:#e8defc}.r4{background:#ffd6dc}
+.legend{display:flex;flex-wrap:wrap;gap:6px;font-size:.78em;font-weight:800}
+.legend span{border-radius:999px;padding:2px 8px}
+.wc{font-size:.8em;font-weight:800;color:#2a9d8f}
+.big{font-size:2.2em;font-weight:800}
+.burst{position:fixed;pointer-events:none;font-size:28px;z-index:50;animation:fly 1s ease-out forwards}
+@keyframes fly{to{transform:translate(var(--dx),var(--dy)) scale(.6);opacity:0}}
+.progress{display:flex;gap:4px;margin-top:6px}
+.progress i{flex:1;height:5px;border-radius:3px;background:#eee3d6}
+.progress i.d{background:var(--ice)}.progress i.c{background:var(--sun)}
+.small{font-size:.82em}
+.sym{font-family:'Baloo 2',system-ui,sans-serif;font-style:normal}
+.seq{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.sp{background:#fff1e3;border-radius:10px;padding:3px 10px;white-space:nowrap}
+.arr{color:var(--sun);font-weight:800}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ============ MASCOTS ============ */
+const ICE = (mood='happy') => `
+<svg class="mascot bob" viewBox="0 0 200 230" xmlns="http://www.w3.org/2000/svg">
+  <path d="M60 110 L100 220 L140 110 Z" fill="#f2b56b" stroke="#c98a3e" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M72 125 L128 125 M80 148 L120 148 M88 170 L112 170 M70 115 L110 200 M130 115 L90 200" stroke="#c98a3e" stroke-width="3" opacity=".6"/>
+  <path d="M45 110 C30 60 70 25 100 30 C135 25 172 60 155 110 C150 122 140 112 135 125 C130 140 120 118 115 128 C110 140 98 118 92 130 C86 142 78 116 70 126 C62 135 52 120 45 110 Z" fill="#ffd1dc" stroke="#e48aa0" stroke-width="4"/>
+  <circle cx="80" cy="45" r="6" fill="#fff" opacity=".8"/>
+  <circle cx="78" cy="78" r="${mood==='sad'?5:7}" fill="#3b2a20"/><circle cx="122" cy="78" r="${mood==='sad'?5:7}" fill="#3b2a20"/>
+  <circle cx="80" cy="76" r="2.3" fill="#fff"/><circle cx="124" cy="76" r="2.3" fill="#fff"/>
+  <ellipse cx="66" cy="94" rx="9" ry="5" fill="#ff8fab" opacity=".7"/><ellipse cx="134" cy="94" rx="9" ry="5" fill="#ff8fab" opacity=".7"/>
+  ${mood==='sad'
+    ? '<path d="M88 102 Q100 92 112 102" stroke="#3b2a20" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M150 60 q6 12 0 16 q-6 -4 0 -16" fill="#7fd3ff"/>'
+    : '<path d="M86 96 Q100 112 114 96" stroke="#3b2a20" stroke-width="4" fill="#ff6b6b" stroke-linecap="round"/>'}
+  <circle cx="100" cy="24" r="12" fill="#ff5a5f" stroke="#c43c41" stroke-width="3"/><path d="M100 12 q4 -10 12 -10" stroke="#5a8f3e" stroke-width="3" fill="none"/>
+</svg>`;
+const SUN = `
+<svg viewBox="0 0 120 120" width="70" height="70" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle">
+  <g stroke="#ff9f1c" stroke-width="6" stroke-linecap="round">
+   <line x1="60" y1="6" x2="60" y2="20"/><line x1="60" y1="100" x2="60" y2="114"/><line x1="6" y1="60" x2="20" y2="60"/><line x1="100" y1="60" x2="114" y2="60"/>
+   <line x1="22" y1="22" x2="32" y2="32"/><line x1="88" y1="88" x2="98" y2="98"/><line x1="98" y1="22" x2="88" y2="32"/><line x1="22" y1="98" x2="32" y2="88"/></g>
+  <circle cx="60" cy="60" r="34" fill="#ffc83d" stroke="#ff9f1c" stroke-width="4"/>
+  <circle cx="48" cy="56" r="4" fill="#3b2a20"/><circle cx="72" cy="56" r="4" fill="#3b2a20"/>
+  <path d="M48 70 Q60 80 72 70" stroke="#3b2a20" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <ellipse cx="40" cy="66" rx="5" ry="3" fill="#ff8a3d"/><ellipse cx="80" cy="66" rx="5" ry="3" fill="#ff8a3d"/>
+</svg>`;
+
+/* ============ CONTENT (from resources only) ============ */
+const TAJUK = 'langkah-langkah menghadapi cuaca panas';
+const P_PEND = [
+  'Cuaca panas ialah keadaan suhu persekitaran yang tinggi dan melebihi paras biasa.',
+  'Kini, fenomena cuaca panas sedang melanda negara kita dan boleh menjejaskan kesihatan murid.',
+  'Oleh itu, KPM telah menangguhkan semua aktiviti luar bilik darjah serta-merta demi keselamatan murid.',
+  'Persoalannya, apakah langkah-langkah menghadapi cuaca panas?'
+];
+const P_ISI1 = [
+  'Langkah pertama ialah kita perlu minum air yang telah dimasak secukupnya.',
+  'Hal ini dikatakan demikian kerana badan mudah kehilangan air semasa cuaca panas.',
+  'Sebagai contohnya, kita boleh membawa botol air masak ke sekolah.',
+  'Kesannya, badan kita akan sentiasa sihat dan tidak mudah letih.',
+  'Jelaslah bahawa minum air secukupnya amat penting.'
+];
+const P_ISI2 = [
+  'Selain itu, kita hendaklah menghadkan aktiviti di luar rumah.',
+  'Hal ini dikatakan demikian kerana cuaca yang panas boleh menyebabkan komplikasi kesihatan.',
+  'Sebagai contohnya, jika tidak dapat dielakkan, kita perlu memakai topi atau membawa payung.',
+  'Kesannya, kita dapat melindungi diri daripada terik matahari.',
+  'Tuntasnya, menghadkan aktiviti luar dapat menjaga kesihatan kita.'
+];
+const S_ISI1 = [
+  'Kita perlu minum air yang telah dimasak secukupnya.',
+  'Badan mudah kehilangan air semasa cuaca panas.',
+  'Kita boleh membawa botol air masak ke sekolah.',
+  'Badan kita akan sentiasa sihat dan tidak mudah letih.',
+  'Minum air secukupnya amat penting.'
+];
+const S_ISI2 = [
+  'Kita hendaklah menghadkan aktiviti di luar rumah.',
+  'Cuaca yang panas boleh menyebabkan komplikasi kesihatan.',
+  'Jika tidak dapat dielakkan, kita perlu memakai topi atau membawa payung.',
+  'Kita dapat melindungi diri daripada terik matahari.',
+  'Menghadkan aktiviti luar dapat menjaga kesihatan kita.'
+];
+const P_TUTUP = [
+  'Kesimpulannya, terdapat banyak langkah menghadapi cuaca panas.',
+  'Semua pihak haruslah bekerjasama dan mengamalkan langkah-langkah ini secara berterusan dalam kehidupan seharian demi kebaikan bersama.',
+  'Bak kata peribahasa, di mana ada kemahuan, di situ ada jalan.',
+  'Diharapkan bahawa kesihatan dan keselamatan masyarakat dijaga sepanjang musim cuaca panas.'
+];
+const T_PEND = ['Maksud tema','Situasi semasa','Tindakan','Persoalan'];
+const T_IDEA = ['Isi utama','Sebab','Contoh','Kesan','Kesimpulan ringkas'];
+const T_TUTUP = ['Kesimpulan','Tindakan','Peribahasa','Harapan'];
+const GRADES = ['Disemak seperti biasa','Maksimum KEPUJIAN','Maksimum MEMUASKAN','TMTPM'];
+
+const LEVELS = [
+ { name:'Peraturan Peperiksaan', zh:'考试规则', icon:'📜',
+   card:{ title:'Kenali Format SPM', zh:'先认识 SPM 格式', steps:[
+     ['Kertas 1 · Bahagian A','30 markah（总分 30%）'],
+     ['Masa cadangan','30 - 40 minit'],
+     ['Panjang karangan','150 - 200 patah perkataan'],
+     ['4 perenggan','Pendahuluan · Isi 1 · Isi 2 · Penutup，每段 45-50 patah'] ]},
+   qs:[
+    {t:'mcq', q:'Bahagian A (Karangan Respons Terhad) bernilai berapa markah?', zh:'这部分占几分？',
+     opts:['20 markah','30 markah','40 markah','50 markah'], a:1,
+     hint:'看「总分」那一行：__%', note:'Bahagian A = 30 markah（总分 30%）'},
+    {t:'mcq', q:'Berapakah masa yang dicadangkan untuk menjawab bahagian ini?', zh:'建议用多少时间？',
+     opts:['15 - 20 minit','30 - 40 minit','45 - 50 minit','60 minit'], a:1,
+     hint:'大约半小时多一点', note:'Masa cadangan: 30 - 40 minit'},
+    {t:'mcq', q:'Panjang karangan yang dikehendaki ialah…', zh:'整篇要写多少字？',
+     opts:['100 - 150 patah perkataan','150 - 200 patah perkataan','200 - 250 patah perkataan','45 - 50 patah perkataan'], a:1,
+     hint:'题目最后一句写着：antara ___ hingga ___ patah perkataan', note:'Seluruh karangan: 150 - 200 patah perkataan'},
+    {t:'mcq', q:'Setiap perenggan sebaiknya mengandungi berapa patah perkataan?', zh:'每一段大约几个字？',
+     opts:['30 - 35','45 - 50','60 - 70','150 - 200'], a:1,
+     hint:'4 段加起来要在 150-200 之内', note:'1 perenggan = 45 - 50 patah perkataan（4 段 ≈ 180-200）'},
+    {t:'mcq', q:'Susunan perenggan yang betul ialah…', zh:'段落的正确顺序？',
+     opts:['Pendahuluan → Isi 1 → Isi 2 → Penutup','Isi 1 → Pendahuluan → Isi 2 → Penutup','Pendahuluan → Penutup → Isi 1 → Isi 2','Isi 1 → Isi 2 → Penutup → Pendahuluan'], a:0,
+     hint:'开头 → 内容 → 结尾', note:'Pendahuluan → Isi 1 → Isi 2 → Penutup'},
+    {t:'tf', q:'Calon boleh menulis jawapan dalam bentuk poin supaya lebih jelas.', zh:'可以用点式（poin）作答吗？',
+     a:false, hint:'看评分标准第 viii 点', note:'Bentuk poin → maksimum TMTPM！一定要写成完整的句子和段落'}
+   ]},
+ { name:'Bina Pendahuluan', zh:'开头四句', icon:'🚪',
+   card:{ title:'Formula Pendahuluan (4 ayat)', zh:'开头四句公式', steps:[
+     ['Maksud tema','第一句：以 TEMA 的意思开头'],
+     ['Situasi semasa','第二句：现况'],
+     ['Tindakan','第三句：行动（可放入一个 Bahan）'],
+     ['Persoalan','第四句：Persoalannya, apakah [TAJUK]?'] ]},
+   qs:[
+    {t:'order', q:'Susun ayat-ayat Pendahuluan mengikut urutan yang betul.', zh:'把开头四句排好顺序', items:P_PEND,
+     hint:'意思 → 现况 → 行动 → Persoalannya', note:'Tema → Situasi → Tindakan → Persoalan'},
+    {t:'tag', q:'Labelkan fungsi setiap ayat Pendahuluan.', zh:'每一句是什么功能？', tags:T_PEND,
+     items:P_PEND.map((s,i)=>({s,a:T_PEND[i]})),
+     hint:'「Kini…」= 现况；「Oleh itu, KPM…」= 行动', note:'4 ayat: Maksud tema · Situasi semasa · Tindakan · Persoalan'},
+    {t:'mcq', q:'Lengkapkan ayat ke-4: "______, apakah langkah-langkah menghadapi cuaca panas?"', zh:'第四句用什么开头？',
+     opts:['Persoalannya','Kesimpulannya','Sebagai contohnya','Kesannya'], a:0,
+     hint:'这是一个问句 ❓', note:'Ayat ke-4 Pendahuluan: Persoalannya, apakah [TAJUK]?'},
+    {t:'mcq', q:'Bahan manakah paling sesuai dimasukkan dalam ayat Tindakan Pendahuluan?', zh:'哪一个 Bahan 最适合放进开头的「行动」句？',
+     opts:['KPM menangguhkan semua aktiviti luar bilik darjah','Minum air yang telah dimasak','Memakai topi atau payung','Hadkan aktiviti di luar rumah'], a:0,
+     hint:'谁采取了行动？是一个政府单位', note:'Pendahuluan juga perlu ambil Bahan: KPM tangguhkan aktiviti luar → ayat Tindakan'},
+    {t:'mcq', q:'Ayat pertama Pendahuluan dimulakan dengan…', zh:'开头第一句写什么？',
+     opts:['maksud tema','peribahasa','contoh','kesan'], a:0,
+     hint:'先解释主题是什么', note:'Ayat 1: terangkan maksud tema - "Cuaca panas ialah…"'}
+   ]},
+ { name:'Formula Idea', zh:'内容五句', icon:'💡',
+   card:{ title:'Formula Idea (5 ayat)', zh:'每段 Isi 五句公式', steps:[
+     ['Isi utama','第一句：主要内容'],
+     ['Sebab','第二句：Hal ini dikatakan demikian kerana…'],
+     ['Contoh','第三句：Sebagai contohnya…'],
+     ['Kesan','第四句：Kesannya…'],
+     ['Kesimpulan ringkas','第五句：Jelaslah / Tuntasnya…'] ]},
+   qs:[
+    {t:'tag', q:'Labelkan fungsi setiap ayat dalam Isi 1.', zh:'给 Isi 1 每一句贴标签', tags:T_IDEA,
+     items:S_ISI1.map((s,i)=>({s,a:T_IDEA[i]})),
+     hint:'没有 penanda wacana，要看意思：主要内容？原因？例子？结果？总结？', note:'Isi → Sebab → Contoh → Kesan → Kesimpulan ringkas'},
+    {t:'mcq', q:'Penanda wacana yang sesuai untuk memulakan ayat SEBAB ialah…', zh:'「原因」句用哪个开头？',
+     opts:['Hal ini dikatakan demikian kerana','Sebagai contohnya','Kesannya','Bak kata peribahasa'], a:0,
+     hint:'kerana = 因为', note:'Sebab → "Hal ini dikatakan demikian kerana…"'},
+    {t:'mcq', q:'"______, kita boleh membawa botol air masak ke sekolah."', zh:'这一句是例子，用哪个词开头？',
+     opts:['Sebagai contohnya','Persoalannya','Kesimpulannya','Hal ini dikatakan demikian kerana'], a:0,
+     hint:'举例子 = contoh', note:'Contoh → "Sebagai contohnya…"'},
+    {t:'order', q:'Susun ayat-ayat Isi 2 mengikut formula 5 ayat.', zh:'把 Isi 2 五句排好（没有 penanda wacana，要看意思）', items:S_ISI2,
+     hint:'Isi → Sebab → Contoh → Kesan → Kesimpulan', note:'Isi 2 juga ikut formula 5 ayat yang sama'},
+    {t:'mcq', q:'Perenggan ini KEKURANGAN ayat apa?', zh:'这一段少了哪一句？',
+     passage:'Selain itu, kita hendaklah menghadkan aktiviti di luar rumah. Hal ini dikatakan demikian kerana cuaca yang panas boleh menyebabkan komplikasi kesihatan. Kesannya, kita dapat melindungi diri daripada terik matahari. Tuntasnya, menghadkan aktiviti luar dapat menjaga kesihatan kita.',
+     opts:['Contoh','Sebab','Kesan','Isi utama'], a:0,
+     hint:'数一数：有没有「Sebagai contohnya」？', note:'Tiada Contoh! Tambah: "Sebagai contohnya, …memakai topi atau membawa payung."'},
+    {t:'mcq', q:'Satu perenggan Idea mengandungi berapa ayat?', zh:'一段 Idea 有几句？',
+     opts:['3 ayat','4 ayat','5 ayat','6 ayat'], a:2,
+     hint:'I-S-C-K-K 数一数', note:'Idea = 5 ayat: Isi · Sebab · Contoh · Kesan · Kesimpulan ringkas'}
+   ]},
+ { name:'Pemburu Bahan', zh:'寻找 Bahan', icon:'🔍',
+   card:{ title:'Gunakan SEMUA Bahan!', zh:'一定要用完全部 Bahan', steps:[
+     ['KPM tangguhkan aktiviti luar','→ Pendahuluan（行动句）'],
+     ['Minum air secukupnya / air dimasak','→ Isi 1'],
+     ['Hadkan aktiviti luar / topi atau payung','→ Isi 2'],
+     ['Tidak guna semua bahan','→ maksimum KEPUJIAN ⚠️'] ]},
+   qs:[
+    {t:'mcq', q:'Berapakah bahan yang diberikan dalam soalan cuaca panas?', zh:'题目一共给了几个 Bahan？',
+     opts:['2','3','4','5'], a:1,
+     hint:'一篇短文 + 两张图', note:'3 bahan: KPM tangguh aktiviti luar · minum air · hadkan aktiviti luar / topi & payung'},
+    {t:'tag', q:'Padankan setiap bahan dengan perenggan yang sesuai.', zh:'每个 Bahan 应该放在哪一段？', tags:['Pendahuluan','Isi','Penutup'],
+     items:[{s:'KPM menangguhkan semua aktiviti luar bilik darjah',a:'Pendahuluan'},
+            {s:'Minum air secukupnya dan minumlah air yang telah dimasak',a:'Isi'},
+            {s:'Hadkan aktiviti di luar dan pakai topi atau payung',a:'Isi'}],
+     hint:'KPM 的行动 → 开头；两个「方法」→ 内容', note:'1 bahan dalam Pendahuluan + 2 bahan jadi Isi 1 & Isi 2'},
+    {t:'mcq', q:'"Minum air secukupnya dan minumlah air yang telah ______."', zh:'图里写的是什么水？',
+     opts:['dimasak','disejukkan','dibeli','berais'], a:0,
+     hint:'看图 1 下面的字', note:'Bahan: minum air yang telah dimasak'},
+    {t:'mcq', q:'Jika aktiviti di luar tidak dapat dielakkan, apakah yang perlu dilakukan?', zh:'不能避免出门时，该怎么做？',
+     opts:['Memakai topi atau payung','Minum air sejuk','Berlari dengan cepat','Tidur di rumah'], a:0,
+     hint:'看图 2：🌂🧢', note:'Bahan: hadkan aktiviti luar · pakai topi atau payung'},
+    {t:'mcq', q:'Ali hanya menggunakan 2 daripada 3 bahan. Apakah markah maksimum karangannya?', zh:'只用了 2 个 Bahan，最高拿什么等级？',
+     opts:GRADES, a:1,
+     hint:'评分标准第 v 点', note:'Tidak menyentuh semua bahan → maksimum KEPUJIAN'},
+    {t:'tf', q:'Calon boleh menambah idea lain di samping menggunakan semua bahan.', zh:'用完全部 Bahan 后，可以加自己的 idea 吗？',
+     a:true, hint:'评分标准第 iv 点', note:'Semua bahan + idea lain → diterima dan disemak seperti biasa'}
+   ]},
+ { name:'Bina Penutup', zh:'结尾四句', icon:'🏁',
+   card:{ title:'Formula Penutup (4 ayat)', zh:'结尾四句公式', steps:[
+     ['Kesimpulan','Kesimpulannya, terdapat banyak [TAJUK].'],
+     ['Tindakan','采取的方案 / 行动'],
+     ['Peribahasa','Bak kata peribahasa, di mana ada kemahuan, di situ ada jalan.'],
+     ['Harapan','期望：Diharapkan…'] ]},
+   qs:[
+    {t:'order', q:'Susun ayat-ayat Penutup mengikut urutan yang betul.', zh:'把结尾四句排好', items:P_TUTUP,
+     hint:'Kesimpulannya → 行动 → 谚语 → 期望', note:'Kesimpulan → Tindakan → Peribahasa → Harapan'},
+    {t:'mcq', q:'"Bak kata peribahasa, di mana ada kemahuan, di situ ada ______."', zh:'谚语最后一个词是？',
+     opts:['jalan','cara','harapan','kejayaan'], a:0,
+     hint:'有志者事竟成 - 有路可走', note:'Di mana ada kemahuan, di situ ada jalan.'},
+    {t:'tag', q:'Labelkan fungsi setiap ayat Penutup.', zh:'结尾每一句的功能', tags:T_TUTUP,
+     items:P_TUTUP.map((s,i)=>({s,a:T_TUTUP[i]})),
+     hint:'「Diharapkan…」= 期望', note:'Kesimpulan · Tindakan · Peribahasa · Harapan'},
+    {t:'mcq', q:'Ayat pertama Penutup yang paling tepat ialah…', zh:'结尾第一句？',
+     opts:['Kesimpulannya, terdapat banyak langkah menghadapi cuaca panas.','Persoalannya, apakah langkah-langkah menghadapi cuaca panas?','Sebagai contohnya, kita boleh membawa botol air masak.','Hal ini dikatakan demikian kerana cuaca sangat panas.'], a:0,
+     hint:'和 Pendahuluan 的 Persoalan 互相呼应', note:'Penutup ayat 1: Kesimpulannya, terdapat banyak [TAJUK].'}
+   ]},
+ { name:'BOSS: Pemeriksa SPM', zh:'小小阅卷官', icon:'👑',
+   card:{ title:'Peraturan Pemarkahan', zh:'阅卷官的规则', steps:[
+     ['Semua bahan (+ idea lain)','✅ Disemak seperti biasa'],
+     ['Tidak guna semua bahan / lebih 210 patah','⚠️ Maksimum KEPUJIAN'],
+     ['Kurang daripada 140 patah','⚠️ Maksimum MEMUASKAN'],
+     ['Ditulis dalam bentuk poin','❌ TMTPM'] ]},
+   qs:[
+    {t:'mcq', q:'Karangan Siti: 230 patah perkataan, semua bahan digunakan.', zh:'230 字，用了全部 Bahan', opts:GRADES, a:1,
+     hint:'超过 210 字会怎样？', note:'Melebihi 210 patah → maksimum KEPUJIAN'},
+    {t:'mcq', q:'Karangan Ahmad: 130 patah perkataan, semua bahan digunakan.', zh:'130 字，用了全部 Bahan', opts:GRADES, a:2,
+     hint:'少于 140 字', note:'Kurang daripada 140 patah → maksimum MEMUASKAN'},
+    {t:'mcq', q:'Jawapan Mei Ling:', zh:'这样写可以吗？',
+     passage:'• Minum air masak<br>• Pakai topi atau payung<br>• KPM tangguh aktiviti luar', opts:GRADES, a:3,
+     hint:'这是点式 (poin)', note:'Bentuk poin → TMTPM（Tidak Mencapai Tahap Penguasaan Minimum）'},
+    {t:'mcq', q:'Karangan Ravi: 185 patah perkataan, tetapi tidak menyebut "topi atau payung".', zh:'185 字，漏了一个 Bahan', opts:GRADES, a:1,
+     hint:'有没有用完全部 Bahan？', note:'Tidak menyentuh semua bahan → maksimum KEPUJIAN'},
+    {t:'mcq', q:'Karangan Aina: 190 patah perkataan, semua bahan + satu idea tambahan, ditulis dalam perenggan.', zh:'190 字，全部 Bahan + 自己的 idea', opts:GRADES, a:0,
+     hint:'字数 ✓ Bahan ✓ 段落 ✓', note:'Semua syarat dipenuhi → disemak seperti biasa 🎉'}
+   ]}
+];
+
+/* ============ STATE ============ */
+const S = { mode:'solo', temp:40, score:0, teams:[0,0], turn:0, combo:0, lv:0, qi:0, correct:0, total:0, answered:false, hintUsed:false, timer:null, timeLeft:0 };
+const START_T=40, STEP=0.5, GOAL=28;
+const TOTALQ = LEVELS.reduce((n,l)=>n+l.qs.length,0);
+const app = document.getElementById('app');
+const $ = s => app.querySelector(s);
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]} return a; };
+const esc = s => s;
+
+function setBg(){
+  document.body.classList.toggle('kelas', S.mode==='kelas');
+  document.body.classList.toggle('cool', S.temp<=GOAL);
+  document.body.classList.toggle('hot1', S.temp>=36);
+}
+
+/* ============ SCREENS ============ */
+function home(){
+  clearInterval(S.timer); setBg();
+  app.innerHTML = `
+  <div class="card center">
+    <div>${SUN}</div>
+    ${ICE('sad')}
+    <h1>Misi Selamatkan<br>Bandar Panas 🌡️</h1>
+    <div class="zh">热浪救城任务 · Karangan Respons Terhad · SPM Form 4</div>
+    <p class="small">Gelombang haba melanda Malaysia! Si Aiskrim hampir cair 😱<br>
+    Bina karangan yang sempurna untuk menurunkan suhu bandar dari <b>40°C</b> ke bawah <b>${GOAL}°C</b>.</p>
+    <div class="zh">热浪来袭！每答对一题，城市就降温 ${STEP}°C。降到 ${GOAL}°C 以下就能拯救城市！</div>
+  </div>
+  <div class="card">
+    <h3>Pilih mod <span class="zh">选择模式</span></h3>
+    <div class="modes">
+      <button class="mode ${S.mode==='kelas'?'sel':''}" data-m="kelas"><span class="ic">📽️</span><span><b>Mod Kelas</b><br><span class="zh">投影全班玩 · 分两队轮流答题 · 不限时 · 大字体</span></span></button>
+      <button class="mode ${S.mode==='solo'?'sel':''}" data-m="solo"><span class="ic">📱</span><span><b>Mod Solo</b><br><span class="zh">学生用手机各自玩 · 有倒数计时</span></span></button>
+    </div>
+    <button class="btn block" id="go">Mula Misi ➜</button>
+    <p class="small zh" style="margin-top:10px">共 ${LEVELS.length} 关 · ${TOTALQ} 题 · 约 40 分钟。答对 +10 分；用 💡提示 只得 +5 分；连对 3 题有 Combo 风扇加分 🌀</p>
+  </div>`;
+  app.querySelectorAll('.mode').forEach(b=>b.onclick=()=>{S.mode=b.dataset.m; home();});
+  $('#go').onclick=()=>{ Object.assign(S,{temp:START_T,score:0,teams:[0,0],turn:0,combo:0,lv:0,qi:0,correct:0,total:0}); intro(); };
+}
+
+function hud(){
+  const pct = Math.max(0,Math.min(100,(S.temp-20)/(START_T-20)*100));
+  const goalPct = (GOAL-20)/(START_T-20)*100;
+  let done = 0; for(let i=0;i<S.lv;i++) done+=LEVELS[i].qs.length; done+=S.qi;
+  const prog = Array.from({length:TOTALQ},(_,i)=>`<i class="${i<done?'d':i===done?'c':''}"></i>`).join('');
+  const L = LEVELS[S.lv];
+  const right = S.mode==='kelas'
+    ? `<div class="teams"><span class="team ${S.turn===0?'on':''}">🧊 Ais ${S.teams[0]}</span><span class="team ${S.turn===1?'on':''}">🌀 Kipas ${S.teams[1]}</span></div>`
+    : `<span class="score">⭐ ${S.score}</span>`;
+  return `<div class="hud">
+    <div class="hudrow"><span class="lvltag">${L?L.icon:''} Tahap ${S.lv+1}/${LEVELS.length}</span>${right}</div>
+    <div class="thermo"><span>🧊</span><div class="tbar"><div class="tfill" style="width:${pct}%"></div><div class="tgoal" style="left:${goalPct}%"></div></div><span>🔥</span><span class="tval">${S.temp.toFixed(1)}°C</span></div>
+    <div class="progress">${prog}</div>
+    ${S.combo>=3?`<div class="combo">🌀 COMBO x${S.combo}! Kipas berpusing!</div>`:''}
+  </div>`;
+}
+
+function intro(){
+  clearInterval(S.timer); setBg();
+  const L = LEVELS[S.lv];
+  app.innerHTML = hud() + `
+  <div class="card">
+    <div class="center"><div style="font-size:3em">${L.icon}</div>
+    <span class="pill">TAHAP ${S.lv+1}</span>
+    <h2>${L.name}</h2><div class="zh">${L.zh}</div></div>
+    <h3 style="margin-top:12px">📚 ${L.card.title} <span class="zh">${L.card.zh}</span></h3>
+    <div class="formula">${L.card.steps.map((s,i)=>`<div class="fstep"><span class="fnum">${i+1}</span><span><b>${s[0]}</b><span class="zh">${s[1]}</span></span></div>`).join('')}</div>
+    <button class="btn block" id="go">Mula Tahap ${S.lv+1} ➜</button>
+  </div>`;
+  $('#go').onclick=()=>{ S.qi=0; question(); };
+}
+
+function question(){
+  setBg();
+  const L = LEVELS[S.lv], Q = L.qs[S.qi];
+  S.answered=false; S.hintUsed=false;
+  const typeName = {mcq:'PILIHAN JAWAPAN · 选择题', tf:'BETUL / SALAH · 判断题', order:'SUSUN AYAT · 排序题', tag:'LABELKAN · 配对题'}[Q.t];
+  const teamLine = S.mode==='kelas' ? `<div class="pill" style="margin-bottom:6px">Giliran: ${S.turn===0?'🧊 Pasukan Ais':'🌀 Pasukan Kipas'}</div>` : '';
+  app.innerHTML = hud() + `
+  <div class="card">
+    ${teamLine}
+    <div class="qtype">${typeName} · Soalan ${S.qi+1}/${L.qs.length}</div>
+    <div class="qtext">${Q.q}</div><div class="zh">${Q.zh}</div>
+    ${Q.passage?`<div class="passage">${Q.passage}</div>`:''}
+    ${S.mode==='solo'?'<div class="timer"><i id="tb"></i></div>':''}
+    <div id="body"></div>
+    <div id="hint"></div>
+    <div class="qfoot" id="foot"><button class="btn ghost" id="hb">💡 Petunjuk</button><span></span></div>
+    <div id="fb"></div>
+  </div>`;
+  $('#hb').onclick=()=>{ if(S.answered)return; S.hintUsed=true; $('#hint').innerHTML=`<div class="hintbox">💡 ${Q.hint}</div>`; $('#hb').disabled=true; };
+  ({mcq:renderMcq, tf:renderMcq, order:renderOrder, tag:renderTag})[Q.t](Q);
+  if(S.mode==='solo') startTimer(Q.t==='order'||Q.t==='tag'?75:(Q.t==='tf'?20:30), Q);
+}
+
+function startTimer(sec,Q){
+  clearInterval(S.timer); S.timeLeft=sec; const tb=$('#tb');
+  S.timer=setInterval(()=>{ S.timeLeft--; if(tb) tb.style.width=(S.timeLeft/sec*100)+'%';
+    if(S.timeLeft<=0){ clearInterval(S.timer); if(!S.answered) finish(false,Q,'⏰ Masa tamat!'); } },1000);
+}
+
+function renderMcq(Q){
+  const opts = Q.t==='tf' ? [{x:'✅ Betul',ok:Q.a===true},{x:'❌ Salah',ok:Q.a===false}]
+                          : shuffle(Q.opts.map((x,i)=>({x,ok:i===Q.a})));
+  if(Q.t==='mcq' && Q.opts===GRADES) opts.sort((a,b)=>GRADES.indexOf(a.x)-GRADES.indexOf(b.x));
+  const wide = opts.some(o=>o.x.includes('→')||o.x.length>30);
+  const show = x => x.includes('→') ? `<span class="seq">${x.split(' → ').map(p=>`<b class="sp">${p}</b>`).join('<i class="sym arr">➜</i>')}</span>` : `<span>${x}</span>`;
+  $('#body').innerHTML = `<div class="opts ${wide?'':'two'}">${opts.map((o,i)=>`<button class="opt" data-i="${i}"><span class="k">${'ABCD'[i]}</span>${show(o.x)}</button>`).join('')}</div>`;
+  app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    if(S.answered)return; const o=opts[+b.dataset.i];
+    app.querySelectorAll('.opt').forEach((x,i)=>{x.disabled=true; if(opts[i].ok)x.classList.add('ok');});
+    if(!o.ok) b.classList.add('bad');
+    finish(o.ok,Q);
+  });
+}
+
+function renderOrder(Q){
+  const pool = shuffle(Q.items.map((s,i)=>({s,i}))); const picked=[];
+  const draw=()=>{
+    $('#body').innerHTML = `
+      <div class="small zh" style="margin-top:8px">点下面的句子，依序放进框里；点框里的句子可以拿回来。</div>
+      <div class="slots">${picked.length?picked.map((p,k)=>`<button class="slot" data-k="${k}"><span class="n">${k+1}</span><span>${p.s}</span></button>`).join(''):'<div class="empty">⬇️ Tekan ayat di bawah</div>'}</div>
+      <div class="pool">${pool.map((p,k)=>`<button class="chip ${picked.includes(p)?'used':''}" data-k="${k}">${p.s}</button>`).join('')}</div>
+      <button class="btn ice block" id="chk" ${picked.length<Q.items.length?'disabled':''}>Semak ✔</button>`;
+    app.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{ if(S.answered)return; picked.push(pool[+b.dataset.k]); draw(); });
+    app.querySelectorAll('.slot').forEach(b=>b.onclick=()=>{ if(S.answered)return; picked.splice(+b.dataset.k,1); draw(); });
+    $('#chk').onclick=()=>{
+      const ok = picked.every((p,k)=>p.i===k);
+      $('#body').innerHTML = `<div class="slots">${picked.map((p,k)=>`<div class="slot ${p.i===k?'ok':'bad'}"><span class="n">${k+1}</span><span>${p.s}</span></div>`).join('')}</div>`
+        + (ok?'':`<div class="small"><b>Susunan betul / 正确顺序：</b><ol style="margin:4px 0 0;padding-left:22px">${Q.items.map(s=>`<li>${s}</li>`).join('')}</ol></div>`);
+      finish(ok,Q);
+    };
+  };
+  draw();
+}
+
+function renderTag(Q){
+  const items = shuffle(Q.items.map((it,i)=>({...it,i}))); const ch = items.map(()=>null);
+  const draw=()=>{
+    $('#body').innerHTML = items.map((it,k)=>`
+      <div class="titem" id="ti${k}"><div class="s">${it.s}</div>
+      <div class="tags">${Q.tags.map(t=>`<button class="tag ${ch[k]===t?'sel':''}" data-k="${k}" data-t="${t}">${t}</button>`).join('')}</div></div>`).join('')
+      + `<button class="btn ice block" id="chk" ${ch.includes(null)?'disabled':''}>Semak ✔</button>`;
+    app.querySelectorAll('.tag').forEach(b=>b.onclick=()=>{ if(S.answered)return; ch[+b.dataset.k]=b.dataset.t; draw(); });
+    $('#chk').onclick=()=>{
+      let ok=true;
+      items.forEach((it,k)=>{ const el=$('#ti'+k), good=ch[k]===it.a; if(!good)ok=false;
+        el.classList.add(good?'ok':'bad'); el.querySelectorAll('.tag').forEach(t=>t.disabled=true);
+        if(!good) el.insertAdjacentHTML('beforeend',`<div class="fix">✏️ Jawapan: ${it.a}</div>`); });
+      $('#chk').remove(); finish(ok,Q);
+    };
+  };
+  draw();
+}
+
+function finish(ok,Q,msg){
+  if(S.answered)return; S.answered=true; clearInterval(S.timer);
+  const hb=$('#hb'); if(hb) hb.disabled=true;
+  S.total++;
+  let pts=0;
+  if(ok){ S.correct++; S.combo++; pts = S.hintUsed?5:10; if(S.combo>=3) pts+=5;
+    S.temp = Math.max(18, S.temp-STEP); burst(); }
+  else S.combo=0;
+  if(S.mode==='kelas') S.teams[S.turn]+=pts; else S.score+=pts;
+  const praise = ['Hebat!','Bagus!','Tepat sekali!','Syabas!','Mantap!'][Math.random()*5|0];
+  $('#fb').innerHTML = `<div class="fb ${ok?'ok':'bad'}">
+    <h3>${ok?`🎉 ${praise} +${pts} · Suhu turun ${STEP}°C`:(msg||'😵 Belum tepat…')}</h3>
+    <div class="zh">${ok?(S.combo>=3?'连对 Combo！额外 +5 分 🌀':'答对了，城市降温中 ❄️'):'没关系，看看重点再继续！'}</div>
+    <div class="note">${Q.note}</div>
+    <button class="btn block" id="nx">${nextLabel()} ➜</button></div>`;
+  // refresh HUD
+  const h=app.querySelector('.hud'); h.outerHTML=hud();
+  $('#nx').onclick=next;
+  $('#nx').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function nextLabel(){ const L=LEVELS[S.lv]; if(S.qi<L.qs.length-1) return 'Seterusnya'; return S.lv<LEVELS.length-1?'Tahap seterusnya':'Lihat keputusan'; }
+function next(){
+  S.turn = 1-S.turn;
+  const L=LEVELS[S.lv];
+  if(S.qi<L.qs.length-1){ S.qi++; question(); }
+  else if(S.lv<LEVELS.length-1){ S.lv++; S.qi=0; intro(); }
+  else end();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function burst(){
+  const em=['❄️','🧊','💧','🌀','⭐'];
+  for(let i=0;i<10;i++){ const d=document.createElement('div'); d.className='burst'; d.textContent=em[i%em.length];
+    d.style.left=(innerWidth/2)+'px'; d.style.top=(innerHeight/2)+'px';
+    d.style.setProperty('--dx',(Math.random()*300-150)+'px'); d.style.setProperty('--dy',(Math.random()*-300)+'px');
+    document.body.appendChild(d); setTimeout(()=>d.remove(),1000); }
+}
+
+function wc(arr){ return arr.join(' ').split(/\s+/).filter(Boolean).length; }
+function para(arr,label){
+  return `<p><b class="small">${label}</b> <span class="wc">(${wc(arr)} patah)</span><br>${arr.map((s,i)=>`<span class="r r${i%5}">${s}</span>`).join(' ')}</p>`;
+}
+
+function end(){
+  clearInterval(S.timer); setBg();
+  const win = S.temp<=GOAL;
+  const total = wc([...P_PEND,...P_ISI1,...P_ISI2,...P_TUTUP]);
+  let winner='';
+  if(S.mode==='kelas'){ winner = S.teams[0]===S.teams[1]?'🤝 Seri! Kedua-dua pasukan hebat!':(S.teams[0]>S.teams[1]?'🏆 Pasukan Ais 🧊 menang!':'🏆 Pasukan Kipas 🌀 menang!'); }
+  app.innerHTML = `
+  <div class="card center">
+    ${ICE(win?'happy':'sad')}
+    <h1>${win?'Bandar Diselamatkan! 🎉':'Bandar masih panas… 🥵'}</h1>
+    <div class="zh">${win?'太棒了！城市成功降温，冰淇淋得救了！':'还差一点点！再挑战一次吧！'}</div>
+    <div class="big">${S.temp.toFixed(1)}°C</div>
+    <div>Betul: <b>${S.correct}/${S.total}</b> · ${S.mode==='kelas'?`🧊 Ais ${S.teams[0]} · 🌀 Kipas ${S.teams[1]}`:`⭐ ${S.score} mata`}</div>
+    ${winner?`<h2>${winner}</h2>`:''}
+  </div>
+  <div class="card">
+    <h3>📋 Kad Rumusan <span class="zh">重点总复习</span></h3>
+    <div class="fstep"><span class="fnum">P</span><span><b>Pendahuluan (4)</b><span class="zh">Maksud tema → Situasi semasa → Tindakan → Persoalannya, apakah [TAJUK]?</span></span></div>
+    <div class="fstep" style="margin-top:8px"><span class="fnum">I</span><span><b>Idea (5)</b><span class="zh">Isi utama → Sebab → Contoh → Kesan → Kesimpulan ringkas</span></span></div>
+    <div class="fstep" style="margin-top:8px"><span class="fnum">T</span><span><b>Penutup (4)</b><span class="zh">Kesimpulannya, terdapat banyak [TAJUK] → Tindakan → Peribahasa → Harapan</span></span></div>
+    <div class="fstep" style="margin-top:8px"><span class="fnum">⚠</span><span><b>Ingat!</b><span class="zh">150-200 patah · 每段 45-50 · 用完全部 Bahan · 不可写点式</span></span></div>
+  </div>
+  <div class="card model">
+    <h3>📝 Karangan Contoh <span class="zh">范文（${total} patah perkataan）</span></h3>
+    <div class="zh small">Tajuk: ${TAJUK}</div>
+    ${para(P_PEND,'Pendahuluan')}${para(P_ISI1,'Isi 1')}${para(P_ISI2,'Isi 2')}${para(P_TUTUP,'Penutup')}
+    <div class="legend"><span class="r0">Ayat 1</span><span class="r1">Ayat 2</span><span class="r2">Ayat 3</span><span class="r3">Ayat 4</span><span class="r4">Ayat 5</span></div>
+  </div>
+  <button class="btn block" id="again">🔁 Main Semula</button>`;
+  $('#again').onclick=home;
+}
+
+function fixSyms(root){
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT), list=[];
+  while(w.nextNode()){ const n=w.currentNode; if(/[·→]/.test(n.nodeValue) && !n.parentNode.classList.contains('sym')) list.push(n); }
+  list.forEach(n=>{ const f=document.createDocumentFragment();
+    n.nodeValue.split(/([·→])/).forEach(x=>{ if(!x)return; if(x==='·'||x==='→'){const i=document.createElement('i');i.className='sym';i.textContent=x;f.appendChild(i);} else f.appendChild(document.createTextNode(x)); });
+    n.parentNode.replaceChild(f,n); });
+}
+new MutationObserver(()=>fixSyms(app)).observe(app,{childList:true,subtree:true});
+home();
+</script>
+</body>
+</html>
