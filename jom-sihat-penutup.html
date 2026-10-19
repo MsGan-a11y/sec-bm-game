@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Jom Sihat! Misi Penutup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF4FF;--ink:#183A63;--muted:#5A6F8C;--g:#12B76A;--g2:#0B8F51;--b:#3B82F6;--b2:#1D5FD0;--o:#FF8A3D;--o2:#D9661E;--r:#F04438;--line:#D3E1F7;--soft:#F5F9FF}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Waknan','Baloo 2','ZCOOL KuaiLe',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(#cfdcf3 1.6px,transparent 1.6px);background-size:22px 22px;font-size:16px;line-height:1.5}
+.zh{font-family:'Waknan','ZCOOL KuaiLe','Baloo 2',sans-serif;color:var(--muted);font-weight:400}
+.sym{font-family:'Baloo 2',Arial,sans-serif}
+#app{max-width:480px;margin:0 auto;padding:12px 16px 48px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.pill{background:#fff;border-radius:999px;padding:4px 12px;font-weight:800;box-shadow:0 3px 0 var(--line);font-size:15px;white-space:nowrap}
+.card{background:#fff;border-radius:22px;padding:16px;box-shadow:0 4px 0 var(--line);margin-bottom:12px}
+h1{font-size:30px;line-height:1.15;font-weight:800}
+h2{font-size:21px;line-height:1.25;font-weight:800}
+.center{text-align:center}
+.mascot{display:flex;justify-content:center;margin:4px 0}
+.bubble{background:#fff;border:3px solid var(--line);border-radius:18px;padding:10px 14px;position:relative;margin:6px 0 12px;font-weight:600}
+.bubble:after{content:"";position:absolute;top:-12px;left:50%;margin-left:-10px;border:10px solid transparent;border-bottom-color:var(--line);border-top:0}
+.btn{display:block;width:100%;border:none;border-radius:16px;padding:13px 14px;font:inherit;font-size:18px;font-weight:800;background:var(--b);color:#fff;box-shadow:0 4px 0 var(--b2);cursor:pointer;margin-top:10px}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--b2)}
+.btn.o{background:var(--o);box-shadow:0 4px 0 var(--o2)}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:0 4px 0 var(--line);border:2px solid var(--line)}
+.btn small{display:block;font-size:13px;font-weight:500;opacity:.9}
+.tajuk{background:linear-gradient(135deg,#FFF6D6,#FFE7C7);border:3px dashed var(--o);border-radius:18px;padding:12px;text-align:center}
+.tajuk .lbl{font-size:13px;font-weight:800;color:var(--o2);letter-spacing:1px}
+.tajuk .t{font-size:20px;font-weight:800}
+.rules li{margin:4px 0 4px 20px}
+textarea{width:100%;border:3px solid var(--line);border-radius:16px;padding:12px;font-family:'Baloo 2',sans-serif;font-size:17px;line-height:1.6;color:var(--ink);background:#fff;resize:vertical}
+textarea:focus{outline:none;border-color:var(--b)}
+.lights{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0}
+.light{border-radius:14px;padding:6px 2px;text-align:center;font-weight:800;font-size:13px;border:3px solid}
+.light b{display:block;font-size:20px}
+.light.good{background:#DDF8E7;border-color:var(--g)}
+.light.warn{background:#FFF6D6;border-color:#F5B700}
+.light.bad{background:#FFE4E1;border-color:var(--r)}
+.fb{border-radius:14px;padding:10px 12px;margin-top:8px;font-size:15px}
+.fb.bad{background:#FFF1EF;border:2px solid #FFC9C2}
+.fb.good{background:#E3F8EC;border:2px solid #A9E9C4}
+.fb ul,.notes ul{margin:4px 0 0 18px}
+.w{font-family:'Baloo 2',sans-serif;font-weight:800;background:#FFD9D4;border-radius:6px;padding:0 5px;color:#B42318}
+.wk{font-family:'Baloo 2',sans-serif;font-weight:800;background:#E3F8EC;border-radius:6px;padding:0 5px;color:var(--g2)}
+.lb{font-weight:800;color:var(--b2)}
+.tip{background:#FFF6D6;border-left:6px solid var(--o);border-radius:12px;padding:8px 12px;margin-top:8px;font-size:15px}
+.notes{background:#FFFBEA;border:2px dashed #F5C542;border-radius:14px;padding:10px 12px;margin-top:8px;font-size:15px}
+.stars{font-size:40px;letter-spacing:4px}
+.cert{border:4px solid var(--b);background:#fff;border-radius:22px;padding:16px}
+.para{font-family:'Baloo 2',sans-serif;background:var(--soft);border-radius:12px;padding:10px 12px;line-height:1.8;white-space:pre-wrap}
+.rangka p{margin:8px 0;line-height:1.9;font-size:15px}
+.alt{display:inline-block;background:#E8F0FF;border:2px solid var(--b);color:var(--b2);border-radius:10px;padding:0 6px;font-weight:800;line-height:1.5;margin:1px 0}
+.or{color:var(--o2);font-weight:800;margin:0 3px}
+input[type=text]{width:100%;border:3px solid var(--line);border-radius:14px;padding:10px 12px;font:inherit;font-size:17px;color:var(--ink)}
+input[type=text]:focus{outline:none;border-color:var(--b)}
+.small{font-size:14px}
+.shake{animation:shake .35s}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.confetti{position:fixed;top:-40px;font-size:26px;pointer-events:none;animation:fall linear forwards;z-index:99}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+.pop{animation:pop .35s}
+@keyframes pop{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+/* ================= RANGKA PENUTUP (jawapan yang diterima) =================
+   alts = pilihan perkataan tetap; free = isi bebas (min = bilangan perkataan minimum) */
+const GRAMMAR = [
+  {s:0, alts:['kesimpulannya','sebagai kesimpulan']},
+  {s:0, alts:['terdapat banyak']},
+  {s:0, label:'KEHENDAK', alts:['manfaat','manfaat-manfaat','faedah','kebaikan']},
+  {s:0, label:'KEHENDAK', free:0},
+  {s:0, label:'KEHENDAK', alts:['gaya hidup sihat']},
+  {s:1, alts:['oleh itu','oleh hal yang demikian','justeru']},
+  {s:1, label:'SIAPA', alts:['semua pihak','semua lapisan masyarakat','setiap lapisan masyarakat','segenap lapisan masyarakat',
+     'masyarakat','kita','kita semua','setiap individu','semua orang','orang ramai','rakyat','semua rakyat','rakyat malaysia','setiap insan']},
+  {s:1, label:'perlu / hendaklah', alts:['perlu','perlulah','harus','haruslah','hendak','hendaklah','mesti','mestilah',
+     'wajib','wajiblah','patut','patutlah','sepatutnya','seharusnya','sewajarnya']},
+  {s:1, label:'BUAT APA', free:2},
+  {s:2, alts:['bak kata peribahasa','bak kata pepatah','bak kata orang tua-tua']},
+  {s:2, label:'PERIBAHASA', alts:['di mana ada kemahuan di situ ada jalan','mencegah lebih baik daripada mengubati',
+     'mencegah adalah lebih baik daripada mengubati','melentur buluh biarlah dari rebungnya','sediakan payung sebelum hujan']},
+  {s:3, alts:['diharapkan bahawa','diharapkan']},
+  {s:3, label:'HARAPAN', free:2},
+  {s:3, alts:['supaya','agar']},
+  {s:3, label:'FAEDAH', free:2}
+];
+const LABEL_ZH={'KEHENDAK':'主题/好处','SIAPA':'谁','perlu / hendaklah':'应该','BUAT APA':'做什么','PERIBAHASA':'谚语','HARAPAN':'希望','FAEDAH':'好处'};
+
+/* ---------- bina graf ---------- */
+const NODES=[]; // {s, loop, label, out:[]}
+function node(s,loop=false,label=''){NODES.push({s,loop,label,out:[]});return NODES.length-1;}
+const VOCAB=new Set();
+(function build(){
+  let cur=node(0);
+  GRAMMAR.forEach(seg=>{
+    const pend=[];
+    if(seg.alts){
+      seg.alts.forEach(a=>{
+        const t=a.split(' ');t.forEach(w=>VOCAB.add(w));
+        let prev=cur;
+        t.forEach((w,k)=>{
+          const e={t:'w',w,s:seg.s,label:seg.label||''};
+          NODES[prev].out.push(e);
+          if(k<t.length-1){e.to=node(seg.s);prev=e.to;}else pend.push(e);
+        });
+      });
+    }else{
+      let prev=cur;
+      for(let k=0;k<seg.free;k++){const e={t:'any',s:seg.s,label:seg.label};NODES[prev].out.push(e);e.to=node(seg.s);prev=e.to;}
+      const L=node(seg.s,true,seg.label);NODES[prev].out.push({t:'eps',to:L});
+      const e={t:'eps'};NODES[L].out.push(e);pend.push(e);
+    }
+    const end=node(seg.s);pend.forEach(e=>e.to=end);cur=end;
+  });
+})();
+['keburukan','buruk','baik','hendak','dimana','disitu'].forEach(w=>VOCAB.add(w));
+
+/* ================= UTIL ================= */
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const AR='<span class="sym">&#10140;</span>';
+function osa(a,b){
+  const n=a.length,m=b.length,d=[];
+  for(let i=0;i<=n;i++)d[i]=[i];
+  for(let j=0;j<=m;j++)d[0][j]=j;
+  for(let i=1;i<=n;i++)for(let j=1;j<=m;j++){
+    const c=a[i-1]===b[j-1]?0:1;
+    d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+c);
+    if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])d[i][j]=Math.min(d[i][j],d[i-2][j-2]+1);
+  }
+  return d[n][m];
+}
+function typoOK(exp,got){
+  if(exp===got)return true;
+  if(VOCAB.has(got))return false;
+  if(got.replace(/-/g,'')===exp.replace(/-/g,''))return true;
+  const L=exp.length,th=L<=3?0:L<=7?1:2;
+  return osa(exp,got)<=th;
+}
+function tokenize(raw){
+  const notes=[];
+  let s=raw.toLowerCase().replace(/[’‘`´]/g,"'");
+  if(/[a-z]2(?![a-z0-9])/.test(s))notes.push('Kata ganda: jangan guna angka "2", tulis penuh dengan tanda sempang. <span class="zh">叠词不要写“2”。</span>');
+  s=s.replace(/([a-z]+)2(?![a-z0-9])/g,'$1-$1');
+  s=s.replace(/[^a-z0-9\-\s]/g,' ').replace(/(^|\s)-+/g,' ').replace(/-+(?=\s|$)/g,' ');
+  const t=s.split(/\s+/).filter(Boolean),out=[];
+  const SPLIT={dimana:'di mana',disitu:'di situ',disana:'di sana'};
+  for(let i=0;i<t.length;i++){
+    if(SPLIT[t[i]]){notes.push(`Ejaan: <span class="w">${t[i]}</span> ${AR} <span class="wk">${SPLIT[t[i]]}</span> (dieja terpisah)`);out.push(...SPLIT[t[i]].split(' '));continue;}
+    if(i+1<t.length&&t[i]===t[i+1]&&t[i].length>3){
+      out.push(t[i]+'-'+t[i]);
+      notes.push(`Kata ganda perlu tanda sempang: <span class="w">${esc(t[i])} ${esc(t[i])}</span> ${AR} <span class="wk">${esc(t[i])}-${esc(t[i])}</span>`);i++;
+    }else out.push(t[i]);
+  }
+  return {tokens:out,notes};
+}
+/* ---------- penjajaran teks murid dengan graf rangka ---------- */
+function align(got){
+  const N=NODES.length,m=got.length,INF=1e9,TY=0.25;
+  const cost=[],back=[];
+  for(let n=0;n<N;n++){cost.push(new Float64Array(m+1).fill(INF));back.push(new Array(m+1).fill(null));}
+  cost[0][0]=0;
+  const relax=(n,j,c,b)=>{if(c<cost[n][j]-1e-9){cost[n][j]=c;back[n][j]=b;}};
+  for(let n=0;n<N;n++){
+    const nd=NODES[n];
+    for(let j=1;j<=m;j++){if(cost[n][j-1]<INF)relax(n,j,cost[n][j-1]+(nd.loop?0:1),{pn:n,pj:j-1,op:nd.loop?{t:'free',g:got[j-1],s:nd.s,label:nd.label}:{t:'ins',g:got[j-1],s:nd.s,j:j-1}});}
+    for(const e of nd.out){
+      for(let j=0;j<=m;j++){
+        const c=cost[n][j];if(c>=INF)continue;
+        if(e.t==='eps'){relax(e.to,j,c,{pn:n,pj:j,op:null});continue;}
+        if(e.t==='w'){
+          if(j<m){const g=got[j];const sc=e.w===g?0:(typoOK(e.w,g)?TY:1.01);
+            relax(e.to,j+1,c+sc,{pn:n,pj:j,op:{t:sc===0?'ok':sc<1?'typo':'sub',e:e.w,g,s:e.s,label:e.label,j}});}
+          relax(e.to,j,c+1,{pn:n,pj:j,op:{t:'del',e:e.w,s:e.s,label:e.label,j}});
+        }else{ // any
+          if(j<m)relax(e.to,j+1,c,{pn:n,pj:j,op:{t:'free',g:got[j],s:e.s,label:e.label}});
+          relax(e.to,j,c+1,{pn:n,pj:j,op:{t:'miss',s:e.s,label:e.label,j}});
+        }
+      }
+    }
+  }
+  const ops=[];let n=N-1,j=m;
+  while(back[n][j]){const b=back[n][j];if(b.op)ops.push(b.op);n=b.pn;j=b.pj;}
+  return {cost:cost[N-1][m],ops:ops.reverse()};
+}
+function mech(raw){
+  const notes=[],t=raw.trim();if(!t)return notes;
+  const f=t.match(/[A-Za-z]/);
+  if(f&&f[0]!==f[0].toUpperCase())notes.push('Huruf besar: mulakan perenggan dengan huruf besar. <span class="zh">句首要大写。</span>');
+  if(/[.?!]\s*[a-z]/.test(t))notes.push('Huruf besar: selepas tanda noktah, ayat baharu bermula dengan huruf besar. <span class="zh">句号后的新句子要大写。</span>');
+  if(/kesimpulannya(?!\s*,)/i.test(t))notes.push('Tanda koma: tulis <span class="wk">Kesimpulannya,</span> <span class="zh">后面要逗号。</span>');
+  if(/oleh itu(?!\s*,)/i.test(t))notes.push('Tanda koma: tulis <span class="wk">Oleh itu,</span> <span class="zh">后面要逗号。</span>');
+  if(/bak kata (peribahasa|pepatah|orang tua-tua)(?!\s*,)/i.test(t))notes.push('Tanda koma: tulis <span class="wk">Bak kata peribahasa,</span> <span class="zh">后面要逗号。</span>');
+  if(!t.endsWith('.'))notes.push('Tanda noktah: akhiri perenggan dengan <span class="wk">.</span> <span class="zh">句尾要句号。</span>');
+  if((t.match(/\./g)||[]).length<4)notes.push('Tanda noktah: ada ayat yang tidak ditutup dengan <span class="wk">.</span> (sepatutnya 4 ayat, 4 noktah). <span class="zh">漏了句号。</span>');
+  return notes;
+}
+function check(raw){
+  const {tokens,notes}=tokenize(raw);
+  const r=align(tokens);
+  const per=[0,1,2,3].map(()=>({err:[],typo:[]}));
+  r.ops.forEach(o=>{if(o.t==='typo')per[o.s].typo.push(o);else if(['sub','del','ins','miss'].includes(o.t))per[o.s].err.push(o);});
+  return {pass:per.every(p=>!p.err.length),per,tokens,ops:r.ops,notes:notes.concat(mech(raw))};
+}
+window.check=check;
+
+/* ================= MAKLUM BALAS ================= */
+const lbl=l=>l?` <span class="lb">[${l}]</span>`:'';
+function fbHTML(res){
+  let h='<div class="lights">'+[0,1,2,3].map(s=>{const p=res.per[s];const c=p.err.length?'bad':p.typo.length?'warn':'good';
+    return `<div class="light ${c}"><b>${c==='bad'?'❌':c==='warn'?'🟡':'✅'}</b>Ayat ${s+1}</div>`}).join('')+'</div>';
+  [0,1,2,3].forEach(s=>{const p=res.per[s];if(!p.err.length)return;
+    h+=`<div class="fb bad"><b>Ayat ${s+1} belum betul</b> <span class="zh">（第${s+1}句有错）</span><ul>`;
+    const errs=[];
+    p.err.forEach(o=>{const last=errs[errs.length-1];
+      if(o.t==='del'&&last&&last.t==='del'&&last.j===o.j&&last.label===o.label)last.n++;else errs.push({...o,n:1});});
+    errs.forEach(o=>{
+      if(o.t==='sub')h+=`<li><span class="w">${esc(o.g)}</span> perkataan salah${lbl(o.label)} <span class="zh">写错</span></li>`;
+      else if(o.t==='ins')h+=`<li><span class="w">${esc(o.g)}</span> perkataan berlebihan <span class="zh">多写</span></li>`;
+      else if(o.t==='miss')h+=`<li>Isi <span class="lb">${o.label}</span> belum lengkap <span class="zh">（${LABEL_ZH[o.label]||''}）没写完整</span></li>`;
+      else{const prev=o.j>0?res.tokens[o.j-1]:null;
+        h+=`<li>Tertinggal ${o.n} perkataan ${prev?`selepas <span class="wk">${esc(prev)}</span>`:'di awal ayat'}${lbl(o.label)} <span class="zh">漏写${o.n}个词</span></li>`;}
+    });
+    h+='</ul>';
+    const labs=new Set(p.err.map(o=>o.label));
+    if(labs.has('PERIBAHASA'))h+='<div class="tip">💡 Tulis peribahasa dengan <b>lengkap dan tepat</b>. <span class="zh">谚语要写完整、写对。</span></div>';
+    if(labs.has('KEHENDAK'))h+='<div class="tip">💡 Lihat kad tajuk: tajuk tentang <b>MANFAAT</b> gaya hidup sihat. <span class="zh">看看题目卡。</span></div>';
+    if(labs.has('SIAPA')||labs.has('perlu / hendaklah'))h+='<div class="tip">💡 Ayat 2: <b>SIAPA</b> + <b>perlu/hendaklah</b> + <b>BUAT APA</b>. <span class="zh">谁 + 应该 + 做什么。</span></div>';
+    h+='</div>';
+  });
+  return h;
+}
+function notesHTML(res){
+  const items=[];
+  res.per.forEach(p=>p.typo.forEach(o=>items.push(`Ejaan: <span class="w">${esc(o.g)}</span> ${AR} <span class="wk">${esc(o.e)}</span>`)));
+  items.push(...res.notes);
+  if(!items.length)return '';
+  return `<div class="notes"><b>📝 Catatan Kesalahan</b> <span class="zh">（不影响过关，但要改正）</span><ul>${items.map(x=>'<li>'+x+'</li>').join('')}</ul></div>`;
+}
+
+/* ================= MASKOT ================= */
+function bro(size=120,mood='happy'){
+  const mouth=mood==='wow'?'<ellipse cx="60" cy="90" rx="5" ry="6" fill="#183A63"/>'
+    :'<path d="M51 87 Q60 97 69 87" stroke="#183A63" stroke-width="3" fill="#FF8FA3" stroke-linecap="round"/>';
+  return `<svg width="${size}" height="${size}" viewBox="0 0 120 120" aria-hidden="true">
+  <g transform="translate(92 6)"><path d="M4 0 H24 V8 Q24 20 14 22 Q4 20 4 8 Z" fill="#FFC53D"/><rect x="11" y="22" width="6" height="7" fill="#FFC53D"/><rect x="7" y="29" width="14" height="4" rx="2" fill="#D9961E"/></g>
+  <path d="M22 70 L8 52 M98 70 L106 40" stroke="#B9EBA0" stroke-width="7" stroke-linecap="round"/>
+  <g fill="#2FBF71"><circle cx="38" cy="40" r="22"/><circle cx="60" cy="27" r="24"/><circle cx="83" cy="40" r="22"/><circle cx="60" cy="50" r="22"/></g>
+  <g fill="#6EDB9C"><circle cx="46" cy="30" r="7"/><circle cx="70" cy="19" r="7"/><circle cx="88" cy="34" r="5"/></g>
+  <rect x="22" y="44" width="76" height="9" rx="4.5" fill="#3B82F6"/><circle cx="98" cy="48" r="5" fill="#3B82F6"/>
+  <path d="M40 56 Q60 64 80 56 L77 106 Q60 113 43 106 Z" fill="#C9F2B2"/>
+  <circle cx="52" cy="76" r="4.5" fill="#183A63"/><circle cx="68" cy="76" r="4.5" fill="#183A63"/>
+  <circle cx="53.5" cy="74.5" r="1.5" fill="#fff"/><circle cx="69.5" cy="74.5" r="1.5" fill="#fff"/>
+  <circle cx="45" cy="85" r="4" fill="#FFB3C1"/><circle cx="75" cy="85" r="4" fill="#FFB3C1"/>${mouth}
+  <rect x="45" y="106" width="12" height="8" rx="4" fill="#FF8A3D"/><rect x="63" y="106" width="12" height="8" rx="4" fill="#FF8A3D"/></svg>`;
+}
+function confetti(n=36){
+  const em=['🎉','🏆','🥦','💪','🍎','✨'];
+  for(let i=0;i<n;i++){const s=document.createElement('span');s.className='confetti';s.textContent=em[i%em.length];
+    s.style.left=Math.random()*100+'vw';s.style.animationDuration=(1.6+Math.random()*1.6)+'s';s.style.animationDelay=Math.random()*.4+'s';
+    document.body.appendChild(s);setTimeout(()=>s.remove(),3600);}
+}
+
+/* ================= PERMAINAN ================= */
+let G={name:'',t0:0,att:0,timer:null};
+const fmt=ms=>{const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');};
+const tajukCard=()=>`<div class="tajuk"><div class="lbl">KAD TAJUK 题目</div><div class="t">Manfaat-manfaat gaya hidup sihat</div><div class="small">✍️ Tulis <b>PENUTUP</b> 结尾</div></div>`;
+
+function home(){
+  clearInterval(G.timer);
+  app.innerHTML=`<div class="pop center">
+  <div class="mascot">${bro(150)}</div>
+  <h1>Jom Sihat!<br>Misi Penutup</h1>
+  <p class="zh" style="margin:4px 0 10px">万能结尾挑战 | Karangan Fakta</p>
+  <div class="bubble">Saya <b>Bro Brokoli</b> 🥦 lagi! Pendahuluan sudah siap, sekarang jom tamatkan karangan dengan <b>penutup yang hebat</b>! 🏆</div></div>
+  ${tajukCard()}
+  <div class="card" style="margin-top:12px"><h2>Cara Bermain</h2>
+  <ul class="rules small" style="margin-top:6px">
+  <li>Tulis <b>seluruh perenggan penutup</b> (4 ayat) berdasarkan tajuk. <span class="zh">根据题目写出整段结尾（4句）。</span></li>
+  <li>Semua ayat mesti betul baru <b>lulus</b>. <span class="zh">4句全对才过关。</span></li>
+  <li>Kalau salah, kamu akan tahu ayat mana yang salah. Betulkan dan hantar semula. <span class="zh">系统会告诉你哪一句错，改好再交。</span></li>
+  <li>Isi boleh ditulis dengan ayat sendiri asalkan betul. <span class="zh">内容可以用自己的句子，只要正确。</span></li>
+  <li>Typo kecil masih lulus, tetapi akan ditandakan. <span class="zh">小错字可以过关，但会列出来让你改正。</span></li>
+  </ul>
+  <input type="text" id="nm" placeholder="Nama kamu (pilihan) 你的名字" style="margin-top:12px" maxlength="30"></div>
+  <button class="btn" onclick="G.name=document.getElementById('nm').value.trim();start()">Mula! 💪<small>开始</small></button>`;
+}
+function start(){
+  G.att=0;G.t0=Date.now();clearInterval(G.timer);
+  G.timer=setInterval(()=>{const e=$('#tm');if(e)e.textContent=fmt(Date.now()-G.t0);},1000);
+  app.innerHTML=`<div class="top"><span class="pill">🥦 Jom Sihat!</span><span class="pill">✍️ Cubaan: <span id="at">0</span></span><span class="pill">⏱ <span id="tm">00:00</span></span></div>
+  ${tajukCard()}
+  <div class="card pop" style="margin-top:12px">
+  <h2>Tulis penutup kamu</h2>
+  <p class="zh small" style="margin-bottom:8px">不看框架，独立写出完整的结尾。</p>
+  <textarea id="ta" rows="10" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="Tulis seluruh perenggan penutup di sini...&#10;在这里写出整段结尾..."></textarea>
+  <div id="fb"></div></div>
+  <button class="btn o" id="go" onclick="submit()">Hantar 🏁<small>提交</small></button>`;
+}
+function submit(){
+  const raw=$('#ta').value;
+  if(tokenize(raw).tokens.length<15){$('#fb').innerHTML='<div class="tip">Tulis seluruh perenggan (4 ayat) dahulu. <span class="zh">请先写完整段4句。</span></div>';return;}
+  G.att++;$('#at').textContent=G.att;
+  const res=check(raw);
+  if(res.pass){clearInterval(G.timer);G.elapsed=Date.now()-G.t0;G.final=raw.trim();G.res=res;confetti();end();}
+  else{
+    $('#fb').innerHTML=`<div class="tip" style="margin-top:10px">Belum lulus, cuba lagi! <span class="zh">还没过关，改一改再交！</span></div>`+fbHTML(res)+notesHTML(res);
+    const c=$('#fb');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake');
+    c.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+}
+function end(){
+  const stars=G.att===1?3:G.att<=3?2:1;
+  const msg=stars===3?'Sekali tulis terus sempurna!':stars===2?'Hebat! Kamu berjaya!':'Tahniah! Kamu tidak berputus asa!';
+  const alts=a=>a.map(x=>`<span class="alt">${x}</span>`).join('<span class="or">/</span>');
+  app.innerHTML=`<div class="cert pop center">
+  <div class="mascot">${bro(120)}</div>
+  <div class="stars">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div>
+  <h2>LULUS! ${msg}</h2>
+  <p class="zh">${G.name?esc(G.name)+'，':''}你独立完成了万能结尾！</p>
+  <p style="margin-top:6px"><b>Cubaan: ${G.att}</b> | Masa: ${fmt(G.elapsed)}</p></div>
+  <div class="card" style="margin-top:12px"><h2>📄 Penutup ${G.name?esc(G.name):'saya'}</h2>
+  <div class="para" style="margin-top:8px">${esc(G.final)}</div>
+  ${notesHTML(G.res)||'<div class="fb good" style="margin-top:8px">✨ Tiada kesalahan langsung! <span class="zh">完全没有错误！</span></div>'}</div>
+  <div class="card rangka"><h2>💡 Contoh jawapan guru</h2><p class="zh small">老师的示范答案：</p>
+  <p>Kesimpulannya, terdapat banyak manfaat mengamalkan gaya hidup sihat.</p>
+  <p>Oleh itu, ${alts(['semua pihak','semua lapisan masyarakat'])} ${alts(['perlu(lah)','harus(lah)','hendaklah','mesti(lah)'])} mengamalkan gaya hidup sihat.</p>
+  <p>Bak kata peribahasa, di mana ada kemahuan, di situ ada jalan.</p>
+  <p>Diharapkan bahawa gaya hidup sihat diamalkan supaya kesihatan masyarakat terjamin.</p></div>
+  <p class="small zh center">📸 截图这个画面给老师看。</p>
+  <button class="btn ghost" onclick="home()">Main Semula 🔄<small>再玩一次</small></button>`;
+}
+home();
+</script>
+</body>
+</html>
