@@ -85,7 +85,8 @@ const A3 = ['diabaikan','dipandang rendah','dipandang remeh'];
 const SENT = [
   {end:'.', alts:A1.map(x=>`${TEMA} ${x} dalam kalangan masyarakat`)},
   {end:'.', alts:A2.map(x=>`isu ini ${x} kerana ${TEMA} mendatangkan banyak kebaikan`)},
-  {end:'.', alts:A3.map(x=>`oleh itu ${TEMA} tidak boleh ${x} bagai melukut di tepi gantang oleh masyarakat`)},
+  {end:'.', alts:A3.flatMap(x=>[`oleh itu ${TEMA} tidak boleh ${x} bagai melukut di tepi gantang oleh masyarakat`,
+                                 `oleh itu ${TEMA} tidak boleh ${x} oleh masyarakat`])},
   {end:'?', alts:[`persoalannya apakah ${TAJUK}`]}
 ];
 SENT.forEach(s=>s.tok=s.alts.map(a=>a.split(' ')));
@@ -291,7 +292,7 @@ function end(){
   <div class="card rangka"><h2>💡 Pilihan frasa lain</h2><p class="zh small">下次也可以这样写：</p>
   <p><span class="hl">Gaya hidup sihat</span> ${alts(['merupakan (suatu) topik popular','menjadi buah mulut','menjadi topik perbincangan yang hangat'])} dalam kalangan masyarakat.</p>
   <p>Isu ini ${alts(['sering menjadi topik utama','sering dibincangkan','sering menjadi perbincangan hangat'])} kerana <span class="hl">gaya hidup sihat</span> mendatangkan banyak kebaikan.</p>
-  <p>Oleh itu, <span class="hl">gaya hidup sihat</span> tidak boleh ${alts(['diabaikan','dipandang rendah'])} bagai melukut di tepi gantang oleh masyarakat.</p>
+  <p>Oleh itu, <span class="hl">gaya hidup sihat</span> tidak boleh ${alts(['diabaikan','dipandang rendah'])} (bagai melukut di tepi gantang) oleh masyarakat.</p>
   <p>Persoalannya, apakah <span class="hl">manfaat-manfaat gaya hidup sihat</span>?</p></div>
   <p class="small zh center">📸 截图这个画面给老师看。</p>
   <button class="btn ghost" onclick="home()">Main Semula 🔄<small>再玩一次</small></button>`;
