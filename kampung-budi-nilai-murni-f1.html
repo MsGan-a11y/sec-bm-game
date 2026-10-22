@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Kampung Budi · Nilai Murni Tingkatan 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+<style>
+:root{--glow:#ffd84d;--ink:#2b2350;--card:#fffdf6;--ok:#2fbf71;--bad:#ff6b6b;--pur:#6c5ce7;--mint:#7fe0c4}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:#1d2150}
+body{font-family:'Waknan','Baloo 2','ZCOOL KuaiLe',sans-serif;color:var(--ink);min-height:100vh}
+.zh{font-family:'Waknan','ZCOOL KuaiLe','Baloo 2',sans-serif}
+#app{max-width:560px;margin:0 auto;min-height:100vh;position:relative;overflow:hidden;
+  background:linear-gradient(180deg,#1d2150 0%,#34398a 50%,#3f6e57 100%)}
+@media(min-width:900px){html{font-size:21px}#app{max-width:900px}}
+#sky{position:absolute;inset:0;pointer-events:none;z-index:0}
+#sky i{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;animation:tw 3s infinite ease-in-out}
+@keyframes tw{50%{opacity:.2}}
+.screen{display:none;padding:16px 16px 40px;min-height:100vh;position:relative;z-index:1}
+.screen.on{display:block;animation:fade .35s}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}}
+button{font-family:inherit;cursor:pointer;border:none}
+.btn{display:block;width:100%;padding:14px;border-radius:18px;font-size:1.15rem;font-weight:800;color:#fff;
+  background:linear-gradient(180deg,#ff9f43,#ff6b3d);box-shadow:0 5px 0 #c4472a;margin-top:14px}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #c4472a}
+.btn.alt{background:linear-gradient(180deg,#8e7dff,#6c5ce7);box-shadow:0 5px 0 #4b3cb8}
+.btn.ghost{background:rgba(255,255,255,.15);box-shadow:none;font-size:1rem}
+.card{background:var(--card);border-radius:22px;padding:16px;box-shadow:0 8px 24px rgba(0,0,0,.25);margin-top:14px}
+.small{font-size:.9rem;opacity:.8}
+.center{text-align:center}
+.kelip{width:120px;height:120px;margin:0 auto;display:block;animation:fly 2.6s ease-in-out infinite}
+.kelip.s{width:3.2rem;height:3.2rem;flex-shrink:0}
+@keyframes fly{50%{transform:translateY(-10px) rotate(-4deg)}}
+.title{text-align:center;color:#fff;margin-top:10px}
+.title h1{font-size:2.6rem;line-height:1;color:var(--glow);text-shadow:0 0 18px rgba(255,216,77,.7),0 4px 0 #b8860b}
+.title p{font-size:1.1rem;margin-top:6px}
+.rules li{margin:6px 0 6px 20px;line-height:1.5}
+/* top bar */
+.top{display:flex;align-items:center;gap:8px;color:#fff}
+.pill{background:rgba(255,255,255,.18);padding:6px 12px;border-radius:999px;font-weight:800;font-size:1rem}
+.top .sp{flex:1}
+.iconbtn{background:rgba(255,255,255,.18);color:#fff;border-radius:12px;padding:6px 12px;font-size:1.05rem}
+.say{display:flex;gap:8px;align-items:center;margin-top:12px}
+.say .bub{background:#fff;border-radius:16px;padding:10px 12px;font-size:1rem;flex:1;line-height:1.5}
+/* map */
+.round{margin-top:14px}
+.rlabel{color:#fff;font-weight:800;font-size:.95rem;margin-bottom:4px;display:flex;gap:6px;align-items:center}
+.rlabel .tag{background:rgba(255,255,255,.18);border-radius:999px;padding:1px 10px;font-size:.8rem}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.house{background:none;position:relative;text-align:center}
+.roof{height:30px;background:#5c6080;clip-path:polygon(50% 0,100% 100%,0 100%);margin:0 4px -1px}
+.hb{background:#7d829e;border-radius:0 0 12px 12px;padding:6px 4px 8px;min-height:80px;color:#e4e6f3;transition:.3s}
+.hb .hic{font-size:1.6rem;filter:grayscale(1) opacity(.6);display:block}
+.hb b{font-size:.8rem;line-height:1.1;display:block;margin-top:2px}
+.num{position:absolute;top:14px;left:50%;transform:translateX(-50%);font-size:.7rem;color:#fff;font-weight:800}
+.house.lit .roof{background:#e2553f}
+.house.lit .hb{background:#ffe9a8;color:var(--ink);box-shadow:0 0 22px 4px rgba(255,216,77,.75)}
+.house.lit .hic{filter:none}
+.house.lock{opacity:.45}
+.round.now .hb{animation:pulse 1.2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 5px rgba(127,224,196,.85)}}
+.house .gem{position:absolute;top:-6px;right:0;font-size:1rem}
+.ground{height:14px;background:#2f5a3f;border-radius:8px;margin-top:14px}
+/* round screen */
+.steps{display:flex;gap:5px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.steps i{width:22px;height:8px;border-radius:6px;background:rgba(255,255,255,.25)}
+.steps i.on{background:var(--glow)}
+.steps i.q.on{background:var(--mint)}
+.phase{color:#fff;text-align:center;font-weight:800;margin-top:6px;font-size:1rem}
+.villager{display:flex;gap:10px;align-items:flex-start;margin-top:14px}
+.face{font-size:3rem;background:#fff;border-radius:50%;width:4.4rem;height:4.4rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 0 rgba(0,0,0,.15)}
+.villager .bub{background:#fff;border-radius:18px;padding:12px;flex:1;line-height:1.55;font-size:1.1rem}
+.villager .bub b{color:var(--pur)}
+.mystery{background:repeating-linear-gradient(45deg,#8e7dff,#8e7dff 14px,#7a68f5 14px,#7a68f5 28px);color:#fff;text-align:center;
+  border-radius:22px;padding:28px 16px;margin-top:14px;width:100%;box-shadow:0 6px 0 #4b3cb8}
+.mystery .q{font-size:3.4rem;line-height:1;animation:bob 1.4s infinite}
+@keyframes bob{50%{transform:scale(1.12)}}
+.mystery b{display:block;font-size:1.25rem;margin-top:8px}
+.vcard{animation:flip .55s}
+@keyframes flip{from{transform:rotateY(90deg);opacity:0}}
+.vcard .vh{display:flex;align-items:center;gap:10px}
+.vcard .vh .big{font-size:2.6rem}
+.vcard h2{font-size:1.8rem;line-height:1.1}
+.vcard .mak{font-size:1.15rem;color:#c0392b}
+.lbl{display:inline-block;font-size:.8rem;font-weight:800;background:#efeaff;color:var(--pur);padding:2px 10px;border-radius:999px;margin-top:12px}
+.pen{font-size:1.1rem;line-height:1.6;margin-top:6px}
+mark{background:linear-gradient(transparent 45%,#ffe066 45%);color:inherit;font-weight:800;padding:0 2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{background:#e7fbf4;border:2px solid var(--mint);border-radius:999px;padding:3px 10px;font-size:.95rem;font-weight:700}
+/* question */
+.qtype{font-weight:800;color:var(--pur)}
+.qtext{font-size:1.2rem;line-height:1.55;margin-top:8px}
+.opts{display:grid;gap:10px;margin-top:14px}
+@media(min-width:900px){.opts{grid-template-columns:1fr 1fr}}
+.opt{background:#fff;border:3px solid #e6defa;border-radius:16px;padding:12px;font-size:1.1rem;font-weight:700;color:var(--ink);text-align:left;display:flex;gap:10px;align-items:center}
+.opt .l{background:#efeaff;color:var(--pur);border-radius:10px;width:1.7rem;height:1.7rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.opt.ok{border-color:var(--ok);background:#e5f9ee}
+.opt.no{border-color:var(--bad);background:#ffecec;opacity:.65}
+.opt:disabled{cursor:default}
+.hint,.fb{margin-top:12px;border-radius:14px;padding:10px 12px;line-height:1.5;display:none}
+.hint{background:#fff7d6}
+.fb.good{background:#e5f9ee;border:2px solid var(--ok)}
+.fb.bad{background:#ffecec;border:2px solid var(--bad)}
+.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.gems{font-size:3.6rem;letter-spacing:10px;animation:pop .6s}
+@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.25)}}
+/* book */
+#book{position:fixed;inset:0;background:rgba(20,20,50,.8);z-index:20;display:none;overflow:auto;padding:16px}
+#book.on{display:block}
+#book .in{max-width:860px;margin:0 auto}
+.bk{background:var(--card);border-radius:16px;padding:12px;margin-top:10px}
+.bk.lock{opacity:.55}
+.bk h3{font-size:1.15rem}
+.cf{position:fixed;top:-40px;font-size:1.6rem;z-index:30;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+.starsRow{font-size:2.4rem;letter-spacing:6px}
+</style>
+</head>
+<body>
+<div id="app">
+<div id="sky"></div>
+
+<!-- START -->
+<section class="screen on" id="sStart">
+  <div class="title">
+    <svg class="kelip" viewBox="0 0 120 120" aria-hidden="true"><use href="#k"/></svg>
+    <h1>Kampung Budi</h1>
+    <p>✨ Misi Nilai Murni · Tingkatan 1 ✨</p>
+  </div>
+  <div class="card zh">
+    <p style="line-height:1.6">Kampung Budi 的 <b>15 颗 Nilai Murni 宝石</b>不见了，整个村子变得黑漆漆！🌙<br>跟着萤火虫 <b>Kelip</b> 拜访村民，听他们的故事，认识每一个 Nilai Murni，把村子重新点亮吧！</p>
+    <ol class="rules" style="margin-top:8px">
+      <li>🏘️ 共 <b>5 个 Pusingan</b>，每个 Pusingan 学 <b>3 个</b> Nilai Murni</li>
+      <li>🤔 先听村民的故事，<b>全班先想一想</b>是哪一个 Nilai Murni</li>
+      <li>👆 老师点击，才显示学习卡</li>
+      <li>❓ 学完 3 个后，一起回答 <b>6 题</b>（第一次答对 +100，第二次 +50）</li>
+      <li>💡 答错会出现提示，不用怕！</li>
+      <li>🏆 5 个 Pusingan 完成后，挑战「Cabaran Akhir」</li>
+    </ol>
+  </div>
+  <button class="btn" id="bStart">Mula! 开始 ➜</button>
+  <button class="btn ghost" id="bReset" style="display:none">🔄 Mula semula dari awal（重新开始）</button>
+</section>
+
+<!-- MAP -->
+<section class="screen" id="sMap">
+  <div class="top">
+    <span class="pill" id="gemC">💎 0/15</span><span class="pill" id="scoreC">⭐ 0</span>
+    <span class="sp"></span>
+    <button class="iconbtn" id="bBook" title="Buku Nilai">📖</button>
+    <button class="iconbtn" id="bSnd">🔊</button>
+  </div>
+  <div class="say">
+    <svg class="kelip s" viewBox="0 0 120 120"><use href="#k"/></svg>
+    <div class="bub zh" id="mapSay"></div>
+  </div>
+  <div id="rounds"></div>
+  <div class="ground"></div>
+  <div id="goBox"></div>
+</section>
+
+<!-- ROUND -->
+<section class="screen" id="sRound">
+  <div class="top">
+    <button class="iconbtn" id="bBack">🏘️ Kampung</button>
+    <span class="sp"></span>
+    <span class="pill" id="rNo"></span>
+    <span class="pill" id="scoreR">⭐ 0</span>
+  </div>
+  <div class="steps" id="steps"></div>
+  <div class="phase zh" id="phase"></div>
+  <div id="rBody"></div>
+</section>
+
+<!-- WIN -->
+<section class="screen" id="sWin">
+  <div class="title">
+    <h1>Tahniah! 🎉</h1>
+    <p>Kelas kamu ialah Wira Kampung Budi!</p>
+  </div>
+  <div class="card center">
+    <div class="starsRow" id="winStars"></div>
+    <p style="font-size:1.4rem;font-weight:800;margin-top:6px" id="winScore"></p>
+    <p class="zh" style="margin-top:8px;line-height:1.6">Kampung Budi kembali bercahaya! ✨<br>全班已经认识了全部 15 个 Nilai Murni！</p>
+  </div>
+  <div class="card zh" style="line-height:1.6">
+    <b>📝 下一步：</b>打开 Nilai Murni 资料，完成功课。<br>忘记了？按下面的「Buku Nilai」复习全部 15 个！
+  </div>
+  <button class="btn alt" id="bBook2">📖 Buku Nilai（复习）</button>
+  <button class="btn" id="bAgain">🔄 Main semula dari awal</button>
+</section>
+
+<!-- BOOK -->
+<div id="book"><div class="in">
+  <div class="top"><span class="pill">📖 Buku Nilai</span><span class="sp"></span><button class="iconbtn" id="bClose">✖</button></div>
+  <div id="bookList"></div>
+</div></div>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs><g id="k">
+    <circle cx="60" cy="88" r="30" fill="#ffd84d" opacity=".35"/>
+    <ellipse cx="60" cy="86" rx="20" ry="17" fill="#ffe46b"/>
+    <ellipse cx="34" cy="50" rx="20" ry="13" fill="#bfe9ff" opacity=".85" transform="rotate(-25 34 50)"/>
+    <ellipse cx="86" cy="50" rx="20" ry="13" fill="#bfe9ff" opacity=".85" transform="rotate(25 86 50)"/>
+    <path d="M50 33 Q44 16 36 14" stroke="#4b3cb8" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M70 33 Q76 16 84 14" stroke="#4b3cb8" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="36" cy="14" r="4" fill="#ffd84d"/><circle cx="84" cy="14" r="4" fill="#ffd84d"/>
+    <circle cx="60" cy="56" r="25" fill="#7a5cff"/>
+    <circle cx="51" cy="53" r="7" fill="#fff"/><circle cx="69" cy="53" r="7" fill="#fff"/>
+    <circle cx="52" cy="54" r="3.5" fill="#222"/><circle cx="70" cy="54" r="3.5" fill="#222"/>
+    <circle cx="45" cy="63" r="4" fill="#ff8fb1" opacity=".8"/><circle cx="75" cy="63" r="4" fill="#ff8fb1" opacity=".8"/>
+    <path d="M53 65 Q60 71 67 65" stroke="#222" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </g></defs>
+</svg>
+</div>
+
+<script>
+/* ===== DATA: semua isi daripada nota Nilai Murni ===== */
+const V=[
+{n:"Kasih sayang",zh:"关爱 / 疼爱",ic:"💗",who:"Mak Cik Senah",face:"👵",
+ pen:"Perasaan cinta dan sayang yang mendalam terhadap keluarga, rakan, dan makhluk lain.",
+ kw:["cinta dan sayang yang mendalam","keluarga, rakan, dan makhluk lain"],
+ st:"Mak Cik Senah sangat menyayangi keluarganya. Setiap hari dia memeluk cucu-cucunya dan menjaga kucing peliharaannya dengan penuh kasih.",
+ stz:"Senah 阿姨很爱她的家人，每天拥抱孙子，也细心疼爱她养的猫。",
+ key:"Kasih sayang = cinta yang mendalam terhadap keluarga, rakan dan makhluk lain (haiwan pun termasuk!).",
+ q:[{t:"sit",s:"Aina sangat sayang akan adiknya. Dia selalu memeluk adiknya dan menyatakan rasa cintanya kepada adiknya.",o:["Kasih sayang"],h:"Kata kunci: <b>sayang</b>, <b>cinta</b>, terhadap <b>keluarga</b>."},
+    {t:"fill",s:"Perasaan cinta dan sayang yang ______ terhadap keluarga, rakan, dan makhluk lain.",o:["mendalam","sementara","berpura-pura","sedikit"],h:"Kasih sayang yang sebenar sangat kuat dan dalam（深深的）。"}]},
+{n:"Baik hati",zh:"善良 / 好心",ic:"😊",who:"Pak Abu",face:"👴",
+ pen:"Sikap suka membantu dan bertimbang rasa terhadap orang lain tanpa mengharapkan balasan.",
+ kw:["suka membantu","bertimbang rasa","tanpa mengharapkan balasan"],
+ st:"Basikal jiran Pak Abu rosak. Pak Abu terus membaikinya dan tidak meminta sebarang bayaran.",
+ stz:"邻居的脚车坏了，Abu 伯伯马上帮忙修理，一分钱也不收。",
+ key:"Baik hati = suka membantu orang lain TANPA mengharapkan balasan.",
+ q:[{t:"sit",s:"Danial membantu seorang pak cik mengangkat barang yang berat tanpa meminta upah.",o:["Baik hati"],h:"Kata kunci: <b>membantu</b> + <b>tanpa meminta upah</b>（不求回报）。"},
+    {t:"zh",s:"善良 / 好心",o:["Baik hati"],h:"善良的人<b>suka membantu</b> orang lain tanpa balasan."}]},
+{n:"Keprihatinan",zh:"关怀 / 体贴",ic:"🤲",who:"Cikgu Ros",face:"👩‍🏫",
+ pen:"Sikap mengambil berat dan peka terhadap keadaan serta kesusahan orang di sekeliling.",
+ kw:["mengambil berat dan peka","keadaan serta kesusahan orang di sekeliling"],
+ st:"Cikgu Ros perasan Mei Mei kelihatan sedih dan tidak bermaya di dalam kelas. Dia segera bertanya tentang keadaan Mei Mei dan mendapati keluarganya sedang dalam kesusahan.",
+ stz:"Ros 老师发现 Mei Mei 上课时很难过、没精神，马上关心询问，才知道她家里有困难。",
+ key:"Keprihatinan = MENGAMBIL BERAT dan PEKA terhadap keadaan serta kesusahan orang di sekeliling.",
+ q:[{t:"sit",s:"Hafiz perasan jirannya, seorang warga emas, tidak keluar rumah selama dua hari. Dia berasa risau lalu pergi bertanya tentang keadaannya.",o:["Keprihatinan"],h:"Hafiz <b>peka</b>（留意到）dan <b>mengambil berat</b> akan keadaan jirannya."},
+    {t:"fill",s:"Sikap mengambil berat dan ______ terhadap keadaan serta kesusahan orang di sekeliling.",o:["peka","malas","sombong","marah"],h:"Cepat sedar / perasan keadaan orang lain（敏感、留意）。"}]},
+{n:"Tolong-menolong",zh:"互助 / 合作",ic:"🙌",who:"Penduduk Kampung",face:"👨‍👩‍👧",
+ pen:"Sikap saling membantu antara satu sama lain untuk meringankan beban orang lain.",
+ kw:["saling membantu antara satu sama lain","meringankan beban orang lain"],
+ st:"Semasa musim menuai, penduduk Kampung Budi saling membantu menuai padi di sawah jiran masing-masing supaya beban setiap orang menjadi ringan.",
+ stz:"收割季节，村民们互相帮忙收割邻居的稻田，让每个人的负担都变轻。",
+ key:"Tolong-menolong = SALING membantu antara satu sama lain untuk MERINGANKAN BEBAN.",
+ q:[{t:"sit",s:"Ali membantu Ahmad memahami Matematik, manakala Ahmad pula membantu Ali dalam Bahasa Inggeris. Mereka saling membantu.",o:["Tolong-menolong","Kasih sayang"],h:"Kata kunci: <b>saling membantu</b>（互相帮忙）— kedua-dua pihak membantu."},
+    {t:"zh",s:"互助 / 合作",o:["Tolong-menolong","Kasih sayang"],h:"互助 = <b>saling membantu</b>. Baik hati pula 善良 / 好心。"}]},
+{n:"Hormat-menghormati",zh:"互相尊重",ic:"🤝",who:"Kak Lina",face:"👩",
+ pen:"Memberikan penghargaan dan layanan yang baik kepada orang lain, terutamanya orang tua.",
+ kw:["penghargaan dan layanan yang baik","orang tua"],
+ st:"Apabila bertemu Tok Ketua kampung, Kak Lina bersalaman dan melayannya dengan baik.",
+ stz:"Lina 姐姐遇到村长时，会和他握手，并好好招呼他。",
+ key:"Hormat-menghormati = penghargaan dan layanan yang baik kepada orang lain, terutamanya ORANG TUA.",
+ q:[{t:"sit",s:"Setiap kali pulang ke kampung, Kumar mendengar nasihat datuknya dengan penuh perhatian dan menghargai pendapat datuknya.",o:["Hormat-menghormati","Keprihatinan"],h:"Kumar <b>menghargai</b> dan melayan <b>orang tua</b> dengan baik."},
+    {t:"fill",s:"Hormat-menghormati ialah memberikan penghargaan dan layanan yang baik kepada orang lain, terutamanya orang ______.",o:["tua","muda","kaya","kuat"],h:"Datuk, nenek, ibu bapa… mereka ialah orang ______（年长者）。"}]},
+{n:"Budi Bahasa",zh:"礼貌 / 有教养",ic:"🎀",who:"Daniel",face:"🧒",
+ pen:"Tutur kata dan tingkah laku yang sopan serta beradab dalam pergaulan seharian.",
+ kw:["tutur kata dan tingkah laku yang sopan","beradab dalam pergaulan seharian"],
+ st:"Sebelum masuk ke bilik guru, Daniel mengetuk pintu, memberi salam dan bercakap dengan sopan.",
+ stz:"进教师办公室前，Daniel 会先敲门、打招呼，说话也很有礼貌。",
+ key:"Budi Bahasa = TUTUR KATA dan tingkah laku yang SOPAN serta beradab.",
+ q:[{t:"sit",s:"Siti bercakap dengan sopan dan menggunakan perkataan 'tolong' serta 'terima kasih' ketika meminta bantuan kawannya.",o:["Budi Bahasa","Baik hati"],h:"Perhatikan cara Siti <b>bercakap</b> — <b>tutur kata yang sopan</b>."},
+    {t:"zh",s:"礼貌 / 有教养",o:["Budi Bahasa","Baik hati"],h:"礼貌 = <b>tutur kata dan tingkah laku yang sopan</b>."}]},
+{n:"Rendah diri",zh:"谦虚 / 不自大",ic:"🌾",who:"Encik Lim",face:"👨‍💼",
+ pen:"Sikap tidak sombong dan tidak menunjuk-nunjuk kelebihan diri kepada orang lain.",
+ kw:["tidak sombong","tidak menunjuk-nunjuk kelebihan diri"],
+ st:"Encik Lim seorang usahawan yang berjaya, tetapi dia tidak sombong dan tidak pernah menunjuk-nunjuk kekayaannya kepada penduduk kampung.",
+ stz:"Lim 先生是成功的商人，但他一点也不骄傲，从来不向村民炫耀自己的财富。",
+ key:"Rendah diri = TIDAK SOMBONG dan TIDAK MENUNJUK-NUNJUK kelebihan diri.",
+ q:[{t:"sit",s:"Walaupun Hakim mendapat nombor satu dalam kelas, dia tidak sombong dan tidak menunjuk-nunjuk kepandaiannya kepada kawan-kawan.",o:["Rendah diri","Budi Bahasa"],h:"Kata kunci: <b>tidak sombong</b>, <b>tidak menunjuk-nunjuk</b>（不炫耀）。"},
+    {t:"fill",s:"Sikap tidak sombong dan tidak ______ kelebihan diri kepada orang lain.",o:["menunjuk-nunjuk","menghargai","membantu","meringankan"],h:"Tidak suka memperlihatkan kehebatan diri（炫耀）。"}]},
+{n:"Tanggungjawab",zh:"负责任",ic:"📋",who:"Abang Jo",face:"🧑‍✈️",
+ pen:"Kesanggupan memikul dan melaksanakan tugas atau amanah yang diberikan dengan sempurna.",
+ kw:["memikul dan melaksanakan tugas atau amanah","dengan sempurna"],
+ st:"Abang Jo ialah pengawas sekolah. Setiap pagi, dia menjalankan tugasnya menjaga pintu pagar dengan sempurna.",
+ stz:"Jo 哥哥是学长，每天早上都把守校门的任务做得很好。",
+ key:"Tanggungjawab = sanggup melaksanakan TUGAS atau AMANAH yang diberikan dengan SEMPURNA.",
+ q:[{t:"sit",s:"Sebagai ketua kelas, Farah memastikan semua tugas yang diberikan oleh guru diselesaikan dengan sempurna.",o:["Tanggungjawab","Hormat-menghormati"],h:"Farah <b>melaksanakan tugas</b> yang diberikan <b>dengan sempurna</b>."},
+    {t:"fill",s:"Kesanggupan memikul dan melaksanakan ______ yang diberikan dengan sempurna.",o:["tugas atau amanah","cabaran atau bahaya","beban orang lain","nikmat dan kurniaan"],h:"Guru memberi kerja / ______ kepada kita（任务）。"}]},
+{n:"Keberanian",zh:"勇敢",ic:"🦁",who:"Abang Ijat",face:"🧑",
+ pen:"Kesanggupan menghadapi cabaran atau bahaya demi mempertahankan kebenaran dan hak.",
+ kw:["menghadapi cabaran atau bahaya","mempertahankan kebenaran dan hak"],
+ st:"Kawan Abang Ijat dituduh mencuri. Abang Ijat tahu kawannya tidak bersalah, lalu dia bersuara untuk mempertahankan kawannya walaupun ramai orang memarahinya.",
+ stz:"Ijat 哥哥的朋友被冤枉偷东西。他知道朋友是清白的，就勇敢站出来为朋友说话。",
+ key:"Keberanian = sanggup hadapi cabaran / BAHAYA demi KEBENARAN dan HAK.",
+ q:[{t:"sit",s:"Wei Jie memberitahu guru disiplin tentang kejadian buli walaupun dia diugut oleh pembuli itu.",o:["Keberanian","Hormat-menghormati"],h:"Wei Jie berdepan <b>bahaya</b> diugut demi <b>kebenaran</b>."},
+    {t:"fill",s:"Kesanggupan menghadapi cabaran atau ______ demi mempertahankan kebenaran dan hak.",o:["bahaya","nikmat","beban","kelebihan"],h:"Sesuatu yang boleh mencederakan kita（危险）。"}]},
+{n:"Kerajinan",zh:"勤劳 / 不懒惰",ic:"🐝",who:"Pak Karim",face:"👨‍🌾",
+ pen:"Sikap tekun, cergas, dan tidak malas dalam melakukan sesuatu pekerjaan.",
+ kw:["tekun, cergas, dan tidak malas","melakukan sesuatu pekerjaan"],
+ st:"Pak Karim seorang petani. Setiap hari dia bekerja di kebunnya dengan tekun dan cergas. Dia tidak pernah malas.",
+ stz:"Karim 伯伯是农夫，每天都在园里勤奋又有活力地工作，从来不偷懒。",
+ key:"Kerajinan = TEKUN, CERGAS dan TIDAK MALAS melakukan pekerjaan.",
+ q:[{t:"sit",s:"Mei Ling tidak malas. Setiap hari dia membantu ibunya membersihkan rumah dengan tekun dan cergas.",o:["Kerajinan","Tanggungjawab"],h:"Kata kunci: <b>tidak malas</b>, <b>tekun</b>, <b>cergas</b>（勤劳）。"},
+    {t:"zh",s:"勤劳 / 不懒惰",o:["Kerajinan","Rendah diri"],h:"勤劳 = <b>tekun, cergas, tidak malas</b>."}]},
+{n:"Kegigihan",zh:"坚毅不懈",ic:"💪",who:"Kak Mira",face:"🏃‍♀️",
+ pen:"Usaha yang bersungguh-sungguh dan berterusan untuk mencapai sesuatu matlamat.",
+ kw:["bersungguh-sungguh dan berterusan","mencapai sesuatu matlamat"],
+ st:"Kak Mira mahu memenangi acara 400 meter. Dia berlatih berlari dengan bersungguh-sungguh setiap hari selama berbulan-bulan sehingga matlamatnya tercapai.",
+ stz:"Mira 姐姐想赢得 400 米赛跑，她连续几个月每天认真练跑，直到达成目标。",
+ key:"Kegigihan = usaha BERSUNGGUH-SUNGGUH dan BERTERUSAN untuk mencapai MATLAMAT.",
+ q:[{t:"sit",s:"Wen Hui bertekad untuk mewakili sekolah dalam pertandingan pidato. Dia berlatih bersungguh-sungguh setiap hari selama tiga bulan sehingga mencapai matlamatnya.",o:["Kegigihan","Keberanian"],h:"Ada <b>matlamat</b>（目标）+ usaha <b>bersungguh-sungguh</b> dan <b>berterusan</b>."},
+    {t:"fill",s:"Usaha yang bersungguh-sungguh dan ______ untuk mencapai sesuatu matlamat.",o:["berterusan","saling membantu","secara logik","tanpa balasan"],h:"Tidak berhenti, buat setiap hari（持续不断）。"}]},
+{n:"Kesabaran",zh:"忍耐 / 耐心",ic:"🧘",who:"Pak Long",face:"👨🏾‍🦳",
+ pen:"Kesanggupan menahan perasaan marah atau kecewa ketika menghadapi sesuatu keadaan.",
+ kw:["menahan perasaan marah atau kecewa"],
+ st:"Pak Long menunggu giliran di klinik selama dua jam. Dia tidak marah dan tidak merungut.",
+ stz:"Long 伯伯在诊所排队等了两个小时，他没有生气，也没有抱怨。",
+ key:"Kesabaran = MENAHAN perasaan MARAH atau KECEWA.",
+ q:[{t:"sit",s:"Adik Mira terkoyakkan buku latihannya, tetapi Mira menahan marahnya dan menegur adiknya dengan baik.",o:["Kesabaran","Keberanian"],h:"Kata kunci: <b>menahan marah</b>（忍住怒气）。"},
+    {t:"fill",s:"Kesanggupan menahan perasaan ______ atau kecewa ketika menghadapi sesuatu keadaan.",o:["marah","takut","malu","gembira"],h:"Orang sabar tidak cepat <b>naik angin</b>（生气）。"}]},
+{n:"Ketabahan",zh:"坚强 / 顽强",ic:"🌈",who:"Nek Som",face:"👵🏽",
+ pen:"Kekuatan hati untuk terus bertahan dan tidak mudah putus asa ketika menghadapi dugaan.",
+ kw:["kekuatan hati","tidak mudah putus asa","menghadapi dugaan"],
+ st:"Kebun sayur Nek Som musnah akibat kemarau. Nek Som tidak putus asa. Dia kuat hati dan menanam semula sayur-sayurannya.",
+ stz:"Som 奶奶的菜园因为干旱全毁了，但她没有放弃，坚强地重新种菜。",
+ key:"Ketabahan = KEKUATAN HATI, tidak putus asa ketika menghadapi DUGAAN（考验/挫折）。",
+ q:[{t:"sit",s:"Selepas rumahnya dilanda banjir, Nurul tetap kuat hati dan terus datang ke sekolah tanpa berputus asa.",o:["Ketabahan","Kerajinan"],h:"Banjir ialah satu <b>dugaan</b>. Nurul <b>kuat hati</b> dan <b>tidak putus asa</b>."},
+    {t:"zh2",s:"Ketabahan berkaitan dengan…",o:["kekuatan hati ketika menghadapi dugaan","menahan perasaan marah atau kecewa","berfikir secara logik","berterima kasih atas nikmat"],h:"'Menahan perasaan marah atau kecewa' ialah <b>Kesabaran</b>, bukan Ketabahan!"}]},
+{n:"Rasional",zh:"理智 / 理性",ic:"🧠",who:"Puan Aminah",face:"👩‍🦱",
+ pen:"Berfikir secara logik dan waras berdasarkan sebab yang munasabah sebelum bertindak.",
+ kw:["berfikir secara logik dan waras","sebab yang munasabah","sebelum bertindak"],
+ st:"Pasu bunga Puan Aminah pecah. Dia tidak terus memarahi anaknya, tetapi bertanya dahulu apa yang berlaku sebelum bertindak.",
+ stz:"Aminah 阿姨的花瓶破了。她没有马上骂孩子，而是先问清楚发生什么事，才决定怎么做。",
+ key:"Rasional = fikir secara LOGIK dengan sebab yang munasabah SEBELUM BERTINDAK.",
+ q:[{t:"sit",s:"Apabila menerima mesej tular di media sosial, Jason menyemak kebenarannya dahulu sebelum mempercayai dan berkongsi mesej itu.",o:["Rasional","Kesabaran"],h:"Jason <b>berfikir secara logik</b> dahulu <b>sebelum bertindak</b>."},
+    {t:"fill",s:"Rasional ialah berfikir secara logik dan waras berdasarkan sebab yang munasabah ______ bertindak.",o:["sebelum","selepas","tanpa","semasa"],h:"Fikir dulu, baru buat!（先想再做）"}]},
+{n:"Kesyukuran",zh:"感恩 / 知足",ic:"🙏",who:"Pak Mat",face:"🧔",
+ pen:"Perasaan berterima kasih dan menghargai segala nikmat serta kurniaan yang diterima.",
+ kw:["berterima kasih","menghargai segala nikmat serta kurniaan"],
+ st:"Hasil kebun Pak Mat tahun ini tidak banyak. Namun, Pak Mat tetap berterima kasih dan menghargai rezeki yang diterimanya.",
+ stz:"今年 Mat 伯伯的收成不多，但他依然心怀感恩，珍惜自己得到的一切。",
+ key:"Kesyukuran = BERTERIMA KASIH dan MENGHARGAI segala nikmat yang diterima.",
+ q:[{t:"sit",s:"Ah Seng berterima kasih kepada ibu bapanya dan sangat menghargai hadiah hari jadi yang diterimanya walaupun hadiah itu kecil.",o:["Kesyukuran","Keberanian"],h:"Ah Seng <b>berterima kasih</b> dan <b>menghargai</b> apa yang diterima."},
+    {t:"zh",s:"感恩 / 知足",o:["Kesyukuran","Kerajinan"],h:"感恩 = <b>berterima kasih</b> atas nikmat yang diterima."}]}
+];
+const FINAL=[
+{s:"Lim tidak marah-marah walaupun pasukannya kalah dalam perlawanan. Dia menahan rasa kecewanya dengan tenang.",o:["Kesabaran","Ketabahan"],h:"<b>Menahan</b> rasa <b>kecewa / marah</b> → Kesabaran.",k:"Kesabaran = tahan marah/kecewa · Ketabahan = kuat hati hadapi dugaan"},
+{s:"Murid-murid kelas 1 Bestari saling membantu antara satu sama lain untuk membersihkan kelas supaya kerja menjadi ringan.",o:["Tolong-menolong","Baik hati"],h:"<b>Saling membantu</b> + <b>meringankan beban</b> → Tolong-menolong.",k:"Tolong-menolong = saling membantu · Baik hati = membantu tanpa mengharapkan balasan"},
+{s:"Siti tidak malas. Dia tekun dan cergas melakukan kerja-kerja rumah setiap hari.",o:["Kerajinan","Kegigihan"],h:"<b>Tekun, cergas, tidak malas</b> → Kerajinan.",k:"Kerajinan = tekun, cergas, tidak malas · Kegigihan = usaha berterusan untuk capai matlamat"},
+{s:"Walaupun kaya dan terkenal, Datuk Hamid tidak sombong dan tidak menunjuk-nunjuk kekayaannya.",o:["Rendah diri","Budi Bahasa"],h:"<b>Tidak sombong</b>, <b>tidak menunjuk-nunjuk</b> → Rendah diri.",k:"Rendah diri = tidak sombong · Budi Bahasa = tutur kata & tingkah laku yang sopan"},
+{s:"Danish perasan seorang nenek kelihatan susah hendak melintas jalan. Dia segera mengambil berat akan keadaan nenek itu.",o:["Keprihatinan","Kasih sayang"],h:"<b>Perasan / peka</b> + <b>mengambil berat</b> akan kesusahan orang → Keprihatinan.",k:"Keprihatinan = peka & ambil berat · Kasih sayang = cinta yang mendalam"},
+{s:"Sebagai pengawas perpustakaan, Lim melaksanakan tugas yang diberikan kepadanya dengan sempurna.",o:["Tanggungjawab","Kerajinan"],h:"<b>Tugas yang diberikan</b> + <b>dengan sempurna</b> → Tanggungjawab.",k:"Tanggungjawab = laksanakan tugas dengan sempurna · Kerajinan = tekun & tidak malas"}
+];
+const QT={sit:["🎭 Situasi","这是哪一个 Nilai Murni？"],fill:["✏️ Lengkapkan","选出正确的词，完成 Penerangan。"],zh:["🀄 Padanan Maksud","这个中文意思是哪一个 Nilai Murni？"],zh2:["🔍 Bezakan","选出正确的解释。"],fin:["⚔️ Cabaran Akhir","两个很像！选出正确的 Nilai Murni。"]};
+const RN=5, PER=3;
+
+/* ===== STATE ===== */
+const KEY="kampung-budi-nm-f1-v1";
+let S={done:0,score:0,final:false};
+try{const d=JSON.parse(localStorage.getItem(KEY)||"null");if(d)S=Object.assign(S,d)}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+let snd=true,R=0,mode="learn",li=0,qs=[],qi=0,tries=0,rScore=0;
+const $=id=>document.getElementById(id);
+const isLit=i=>Math.floor(i/PER)<S.done;
+
+(()=>{const sk=$("sky");for(let i=0;i<45;i++){const s=document.createElement("i");s.style.left=Math.random()*100+"%";s.style.top=Math.random()*55+"%";s.style.animationDelay=Math.random()*3+"s";sk.appendChild(s)}})();
+
+let ac=null;
+function tone(f,d,type="sine",delay=0){if(!snd)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(.15,ac.currentTime+delay);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+delay+d);o.connect(g);g.connect(ac.destination);o.start(ac.currentTime+delay);o.stop(ac.currentTime+delay+d)}catch(e){}}
+const sGood=()=>{tone(660,.15);tone(880,.2,"sine",.12)},sBad=()=>tone(200,.25,"square"),
+      sWin=()=>[523,659,784,1047].forEach((f,i)=>tone(f,.25,"triangle",i*.13)),
+      sReveal=()=>[392,523,659].forEach((f,i)=>tone(f,.18,"triangle",i*.09));
+function confetti(n=30,set=["✨","💎","⭐","🎉","💛"]){for(let i=0;i<n;i++){const c=document.createElement("span");c.className="cf";c.textContent=set[i%set.length];c.style.left=Math.random()*100+"vw";c.style.animationDuration=(1.8+Math.random()*1.8)+"s";c.style.animationDelay=Math.random()*.5+"s";document.body.appendChild(c);setTimeout(()=>c.remove(),4200)}}
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("on"));$(id).classList.add("on");window.scrollTo(0,0)}
+function markPen(v){let t=v.pen;v.kw.forEach(k=>{t=t.replace(k,"<mark>"+k+"</mark>")});return t}
+function cardHTML(v){return `<div class="card vcard">
+    <div class="vh"><span class="big">${v.ic}</span><div><h2>${v.n}</h2><div class="mak zh">${v.zh}</div></div></div>
+    <span class="lbl">PENERANGAN</span><p class="pen">${markPen(v)}</p>
+    <span class="lbl">KATA KUNCI 关键词</span>
+    <div class="chips">${v.kw.map(k=>`<span class="chip">🔑 ${k}</span>`).join("")}</div></div>`}
+
+/* ===== START ===== */
+if(S.done>0){$("bStart").textContent="Sambung! 继续 ➜";$("bReset").style.display="block"}
+$("bStart").onclick=()=>{tone(523,.1);renderMap();show("sMap")};
+$("bReset").onclick=()=>{S={done:0,score:0,final:false};save();renderMap();show("sMap")};
+$("bSnd").onclick=()=>{snd=!snd;$("bSnd").textContent=snd?"🔊":"🔇"};
+
+/* ===== MAP ===== */
+function renderMap(){
+  const box=$("rounds");box.innerHTML="";
+  for(let r=0;r<RN;r++){
+    const d=document.createElement("div");
+    d.className="round"+(r===S.done?" now":"");
+    const st=r<S.done?"✅ Selesai":r===S.done?"▶ Sekarang":"🔒";
+    d.innerHTML=`<div class="rlabel">Pusingan ${r+1} <span class="tag">${st}</span></div><div class="grid"></div>`;
+    const g=d.querySelector(".grid");
+    for(let k=0;k<PER;k++){
+      const i=r*PER+k,v=V[i],lit=isLit(i),open=r<=S.done;
+      const b=document.createElement("button");
+      b.className="house"+(lit?" lit":"")+(open?"":" lock");
+      b.innerHTML=`<div class="roof"></div><span class="num">${i+1}</span><div class="hb"><span class="hic">${lit?v.ic:"❔"}</span><b>${lit?v.n:"? ? ?"}</b></div>${lit?'<span class="gem">💎</span>':""}`;
+      b.onclick=()=>{if(lit)openBook(i);else if(r===S.done)startRound(r);else{b.classList.remove("shake");void b.offsetWidth;b.classList.add("shake");sBad()}};
+      g.appendChild(b);
+    }
+    box.appendChild(d);
+  }
+  $("gemC").textContent=`💎 ${S.done*PER}/15`;
+  $("scoreC").textContent=`⭐ ${S.score}`;
+  let msg;
+  if(S.done===0)msg="村子好暗哦… 🌙 我们从 <b>Pusingan 1</b> 开始，一次认识 3 个 Nilai Murni！";
+  else if(S.done<RN)msg=`已经点亮 <b>${S.done*PER}</b> 间屋子！准备好 <b>Pusingan ${S.done+1}</b> 了吗？`;
+  else msg=S.final?"全村都亮了！✨ 点击屋子可以复习学习卡。":"15 间都亮了！🎉 来挑战最后的 <b>Cabaran Akhir</b>！";
+  $("mapSay").innerHTML=msg;
+  const gb=$("goBox");gb.innerHTML="";
+  const b=document.createElement("button");b.className="btn";
+  if(S.done<RN){b.textContent=`▶ Mula Pusingan ${S.done+1}（学 3 个 Nilai）`;b.onclick=()=>startRound(S.done)}
+  else{b.className="btn alt";b.textContent=S.final?"🏆 Lihat keputusan":"⚔️ Cabaran Akhir（6 题）";b.onclick=()=>S.final?showWin():startFinal()}
+  gb.appendChild(b);
+}
+$("bBack").onclick=()=>{renderMap();show("sMap")};
+
+/* ===== ROUND ===== */
+function stepsBar(){
+  if(mode==="final"){$("steps").innerHTML=FINAL.map((_,i)=>`<i class="q ${i<=qi?"on":""}"></i>`).join("");return}
+  const learnOn=mode==="learn"?li:PER;
+  $("steps").innerHTML=Array.from({length:PER},(_,i)=>`<i class="${i<=learnOn?"on":""}"></i>`).join("")+
+    "&nbsp;&nbsp;"+Array.from({length:PER*2},(_,i)=>`<i class="q ${mode!=="learn"&&i<=qi?"on":""}"></i>`).join("");
+}
+function startRound(r){
+  R=r;mode="learn";li=0;rScore=0;
+  $("rNo").textContent=`Pusingan ${r+1}/${RN}`;$("scoreR").textContent=`⭐ ${S.score}`;
+  show("sRound");renderLearn();
+}
+function renderLearn(){
+  const v=V[R*PER+li];stepsBar();
+  $("phase").innerHTML=`📖 Belajar ${li+1}/${PER}（学习）`;
+  $("rBody").innerHTML=`
+  <div class="villager"><div class="face">${v.face}</div>
+    <div class="bub"><b>${v.who}</b><p style="margin-top:4px">${v.st}</p><p class="zh small" style="margin-top:6px">${v.stz}</p></div></div>
+  <div class="say"><svg class="kelip s" viewBox="0 0 120 120"><use href="#k"/></svg>
+    <div class="bub zh">🤔 <b>Fikir dahulu!</b> 先想一想：<b>${v.who}</b> 表现了哪一个 Nilai Murni？大家说出你的答案！</div></div>
+  <div id="cardBox"><button class="mystery" id="bReveal"><div class="q">❓</div><b>Tunjuk Nilai Murni</b><span class="zh small" style="color:#fff">👆 老师点击，显示学习卡</span></button></div>
+  <div id="nextL"></div>`;
+  $("bReveal").onclick=()=>{
+    sReveal();$("cardBox").innerHTML=cardHTML(v);
+    const b=document.createElement("button");b.className="btn";
+    b.textContent=li<PER-1?"Nilai seterusnya ➜（下一个）":"✅ Sudah belajar 3 nilai! 开始答题 ➜";
+    b.onclick=()=>{if(li<PER-1){li++;renderLearn()}else startQuiz()};
+    $("nextL").appendChild(b);
+    setTimeout(()=>$("cardBox")?.scrollIntoView({behavior:"smooth",block:"start"}),80);
+  };
+}
+function buildOpts(q,vi){
+  if(q.t==="fill"||q.t==="zh2")return q.o.slice();
+  const start=R*PER;
+  const names=[0,1,2].map(k=>V[start+k].n);
+  const extra=q.o.slice(1).find(n=>{const idx=V.findIndex(x=>x.n===n);return idx>=0&&idx<start&&!names.includes(n)});
+  if(extra)names.push(extra);
+  else if(start>0){const pool=V.slice(0,start).map(x=>x.n);names.push(pool[Math.random()*pool.length|0])}
+  return names;
+}
+function startQuiz(){
+  mode="quiz";qi=0;
+  const list=[];
+  for(let k=0;k<PER;k++){const vi=R*PER+k;V[vi].q.forEach(q=>list.push({q,vi,ans:q.t==="fill"||q.t==="zh2"?q.o[0]:V[vi].n,opts:buildOpts(q,vi)}))}
+  // campur: soalan 1 setiap nilai dahulu, kemudian soalan 2, susunan nilai diacak
+  const a=shuffle([0,1,2]),b=shuffle([0,1,2]);
+  qs=[...a.map(k=>list[k*2]),...b.map(k=>list[k*2+1])];
+  renderQ();
+}
+function startFinal(){
+  mode="final";qi=0;
+  qs=FINAL.map(f=>({q:Object.assign({t:"fin"},f),ans:f.o[0],opts:f.o.slice(),k:f.k}));
+  $("rNo").textContent="Cabaran Akhir";$("scoreR").textContent=`⭐ ${S.score}`;
+  show("sRound");renderQ();
+}
+function renderQ(){
+  const it=qs[qi],q=it.q,label=QT[q.t];stepsBar();
+  $("phase").innerHTML=mode==="final"?`⚔️ Soalan ${qi+1}/${qs.length}`:`❓ Kuiz ${qi+1}/${qs.length}（答题）`;
+  const choices=shuffle(it.opts);tries=0;const L="ABCD";
+  $("rBody").innerHTML=`
+  <div class="card">
+    <div class="qtype">${label[0]}</div>
+    <div class="zh small">${label[1]}</div>
+    <div class="qtext">${q.t==="zh"?`<span class="zh" style="font-size:1.8rem;color:#c0392b">${q.s}</span>`:q.s}</div>
+    <div class="opts">${choices.map((c,j)=>`<button class="opt" data-v="${c}"><span class="l">${L[j]}</span><span>${c}</span></button>`).join("")}</div>
+    <div class="hint zh" id="hint"></div>
+    <div class="fb" id="fb"></div>
+  </div>
+  <div id="nextBox"></div>`;
+  document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>pick(b,it));
+}
+function pick(b,it){
+  const all=document.querySelectorAll(".opt"),ans=it.ans;
+  const key=mode==="final"?it.k:V[it.vi].key;
+  if(b.dataset.v===ans){
+    sGood();b.classList.add("ok");all.forEach(x=>x.disabled=true);
+    const pts=tries===0?100:50;rScore+=pts;S.score+=pts;save();$("scoreR").textContent=`⭐ ${S.score}`;
+    const fb=$("fb");fb.className="fb good";fb.style.display="block";
+    fb.innerHTML=`✅ <b>Betul! +${pts}</b><br>⭐ <b>Ingat:</b> ${key}`;nextBtn();
+  }else{
+    sBad();tries++;b.classList.add("no","shake");b.disabled=true;
+    if(tries===1){const h=$("hint");h.style.display="block";h.innerHTML="💡 <b>Petunjuk：</b>"+it.q.h}
+    else{
+      all.forEach(x=>{x.disabled=true;if(x.dataset.v===ans)x.classList.add("ok")});
+      const fb=$("fb");fb.className="fb bad";fb.style.display="block";
+      fb.innerHTML=`❌ Jawapan: <b>${ans}</b><br>⭐ <b>Ingat:</b> ${key}`;nextBtn();
+    }
+  }
+}
+function nextBtn(){
+  const b=document.createElement("button");b.className="btn";const last=qi>=qs.length-1;
+  b.textContent=!last?"Soalan seterusnya ➜":mode==="final"?"🏆 Lihat keputusan":"💎 Ambil 3 permata!";
+  b.onclick=()=>{if(!last){qi++;renderQ()}else if(mode==="final"){S.final=true;save();showWin()}else roundDone()};
+  $("nextBox").appendChild(b);setTimeout(()=>b.isConnected&&b.scrollIntoView({behavior:"smooth",block:"center"}),100);
+}
+function roundDone(){
+  if(S.done===R)S.done=R+1;save();sWin();confetti();
+  const vs=[0,1,2].map(k=>V[R*PER+k]);
+  $("steps").innerHTML="";$("phase").innerHTML="";
+  $("rBody").innerHTML=`
+  <div class="card center">
+    <div class="gems">💎💎💎</div>
+    <h2 style="font-size:1.6rem;margin-top:6px">Pusingan ${R+1} selesai!</h2>
+    <p class="zh" style="margin-top:6px">3 间屋子亮起来了！✨</p>
+    <p style="margin-top:10px;font-weight:800">+${rScore} / 600 mata</p>
+  </div>
+  <div class="card"><b>⭐ Ingat 3 nilai ini:</b>
+    ${vs.map(v=>`<p style="margin-top:8px;line-height:1.5">${v.ic} ${v.key}</p>`).join("")}</div>
+  <button class="btn" id="bHome">Kembali ke kampung 🏘️</button>`;
+  $("bHome").onclick=()=>{renderMap();show("sMap")};
+}
+function showWin(){
+  const max=RN*600+FINAL.length*100,pct=S.score/max;
+  const stars=pct>=.85?3:pct>=.6?2:1;
+  $("winStars").textContent="⭐".repeat(stars)+"☆".repeat(3-stars);
+  $("winScore").textContent=`Markah: ${S.score} / ${max}`;
+  show("sWin");sWin();confetti(45);
+}
+$("bAgain").onclick=()=>{S={done:0,score:0,final:false};save();renderMap();show("sMap")};
+
+/* ===== BOOK ===== */
+function openBook(only){
+  const list=only!==undefined?[only]:V.map((_,i)=>i);
+  $("bookList").innerHTML=list.map(i=>{const v=V[i];
+    return isLit(i)?`<div class="bk"><h3>${v.ic} ${i+1}. ${v.n} <span class="zh small" style="color:#c0392b">${v.zh}</span></h3><p class="pen" style="font-size:1rem">${markPen(v)}</p></div>`
+              :`<div class="bk lock"><h3>🔒 ${i+1}. ???</h3><p class="small zh">完成这个 Pusingan 才能打开</p></div>`}).join("");
+  $("book").classList.add("on");
+}
+$("bBook").onclick=()=>openBook();$("bBook2").onclick=()=>openBook();$("bClose").onclick=()=>$("book").classList.remove("on");
+</script>
+</body>
+</html>
